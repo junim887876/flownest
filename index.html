@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Impede indexação em mecanismos de busca (Google, Bing, etc.) -->
+    <meta name="robots" content="noindex, nofollow">
+    <title>FlowNest (IA) • Gestão de Assinaturas</title>
+
+    <!-- Configurações PWA -->
+    <meta name="theme-color" content="#050814">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FlowNest Admin">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Inter Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Biblioteca Leve para QR Code PIX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    colors: {
+                        'fn-bg': '#050814',
+                        'fn-neon': '#39ff4d',
+                        'fn-cyan': '#38bdf8'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { 
+            touch-action: manipulation; 
+            min-height: 100%; 
+            background-color: #050814; 
+            color: #ffffff; 
+            overflow-x: hidden; 
+        }
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+
+        .page-ambient-bg {
+            position: fixed;
+            inset: 0;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
+                radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
+                linear-gradient(180deg, #090e24 0%, #050814 60%, #040711 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bottom-neon-line {
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent 0%, #22c55e 25%, #39ff4d 50%, #0ea5e9 75%, transparent 100%);
+        }
+
+        .hero-profit-box {
+            position: relative;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(22, 32, 58, 0.92) 0%, rgba(11, 18, 36, 0.96) 55%, rgba(12, 38, 34, 0.92) 100%);
+            border: 1px solid rgba(57, 255, 77, 0.35);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+        }
+
+        .bolt-orb {
+            background: radial-gradient(circle at 35% 30%, rgba(57, 255, 77, 0.25), rgba(16, 185, 129, 0.06));
+            border: 1.5px solid rgba(57, 255, 77, 0.65);
+        }
+
+        .client-dark-card {
+            background: linear-gradient(180deg, rgba(19, 28, 52, 0.95) 0%, rgba(11, 17, 34, 0.98) 100%);
+            border-radius: 22px;
+            border: 1px solid rgba(96, 165, 250, 0.24);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            contain: content;
+        }
+
+        .inner-profit-panel {
+            background: rgba(24, 35, 64, 0.75);
+            border: 1px solid rgba(148, 163, 184, 0.15);
+            border-radius: 14px;
+            padding: 10px 12px;
+        }
+
+        .btn-more-details {
+            width: 100%;
+            padding: 9px 14px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #1d4ed8 0%, #173ba6 100%);
+            border: 1px solid rgba(96, 165, 250, 0.45);
+            color: #ffffff;
+            font-size: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .btn-more-details:active { transform: scale(0.97); }
+
+        .top-glass-pill {
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+        }
+
+        /* Estilos LED Status API Apps Script */
+        .server-pill-online {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(57, 255, 77, 0.45);
+            box-shadow: 0 0 16px rgba(57, 255, 77, 0.15);
+        }
+        .server-pill-offline {
+            background: rgba(239, 68, 68, 0.14);
+            border: 1px solid rgba(248, 113, 113, 0.55);
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.22);
+        }
+        .server-pill-checking {
+            background: rgba(245, 158, 11, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+        }
+
+        .led-glow-green {
+            background-color: #39ff4d;
+            box-shadow: 0 0 8px #39ff4d, 0 0 16px #22c55e;
+        }
+        .led-glow-red {
+            background-color: #ef4444;
+            box-shadow: 0 0 8px #ef4444, 0 0 16px #dc2626;
+        }
+        .led-glow-amber {
+            background-color: #fbbf24;
+            box-shadow: 0 0 8px #fbbf24;
+        }
+
+        .modal-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(3, 6, 16, 0.85); 
+            z-index: 1000; 
+            display: none; 
+            opacity: 0; 
+            transition: opacity 0.25s ease; 
+        }
+        .bottom-sheet { 
+            position: fixed; 
+            bottom: 0; 
+            left: 50%; 
+            transform: translate(-50%, 100%);
+            width: 100%; 
+            max-width: 520px; 
+            background: #10172d; 
+            color: #ffffff; 
+            border-top-left-radius: 26px; 
+            border-top-right-radius: 26px; 
+            padding: 18px 20px 32px; 
+            z-index: 1001; 
+            border-top: 1px solid rgba(96, 165, 250, 0.3); 
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+            max-height: 92vh; 
+            overflow-y: auto; 
+        }
+        .modal-pill { 
+            width: 40px; 
+            height: 4px; 
+            background: rgba(255,255,255,0.22); 
+            border-radius: 99px; 
+            margin: 0 auto 16px; 
+        }
+
+        .spinner { 
+            border: 3px solid rgba(255,255,255,0.12); 
+            width: 34px; 
+            height: 34px; 
+            border-radius: 50%; 
+            border-left-color: #39ff4d; 
+            animation: spin 0.75s linear infinite; 
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #toast-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translate(-50%, 120px);
+            z-index: 2000;
+            transition: transform 0.3s ease;
+            width: max-content;
+            max-width: 92vw;
+        }
+        #toast-notification.show { transform: translate(-50%, 0); }
+    </style>
+</head>
+<body class="bg-fn-bg min-h-screen font-sans selection:bg-fn-neon selection:text-slate-950 flex flex-col justify-between">
+
+    <div class="page-ambient-bg"></div>
+
+    <!-- NOTIFICAÇÃO FLUTUANTE -->
+    <div id="toast-notification" class="bg-[#111933] border border-fn-neon/60 text-white px-4 py-3 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-bold">
+        <span class="w-5 h-5 rounded-full bg-fn-neon text-slate-950 flex items-center justify-center text-[10px] flex-shrink-0">
+            <i class="fa-solid fa-robot"></i>
+        </span>
+        <span id="toast-text" class="truncate">Sincronizando...</span>
+    </div>
+
+    <!-- TELA DE CARREGAMENTO -->
+    <div id="loading-screen" class="fixed inset-0 z-50 bg-[#050814] flex flex-col justify-center items-center p-8 transition-opacity duration-300">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-fn-neon flex items-center justify-center mb-5 shadow-lg">
+            <i class="fa-solid fa-microchip text-2xl text-slate-950"></i>
+        </div>
+        <h1 class="text-2xl font-black text-white mb-1 tracking-tight">FLOWNEST<span class="text-sky-400">(IA)</span></h1>
+        <p class="text-xs text-slate-400 mb-6 font-medium text-center">Sincronizando licenças e mensalidades SaaS...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div id="admin-dashboard" class="relative z-10 w-full flex-1 flex flex-col">
+
+        <!-- BARRA SUPERIOR -->
+        <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+
+            <!-- Logotipo FlowNest(IA) -->
+            <div class="flex items-center gap-3 select-none">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-500/20 to-emerald-500/20 border border-sky-400/40 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-layer-group text-xl text-fn-neon"></i>
+                </div>
+                <div>
+                    <div class="text-xl sm:text-2xl font-black tracking-tight leading-none">
+                        <span class="text-white">FLOWNEST</span><span class="text-sky-400">(IA)</span>
+                    </div>
+                    <p class="text-[9px] sm:text-[10px] font-semibold tracking-[0.22em] text-slate-300 uppercase mt-1">
+                        GESTÃO DE LICENÇAS & SAAS
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controles Superiores (Status API + Filtro Status + Engrenagem) -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5">
+
+                <!-- INDICADOR LED DO APPS SCRIPT -->
+                <button onclick="loadAdminData(true)" id="server-status-pill" title="Clique para sincronizar novamente" class="server-pill-checking rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer">
+                    <span class="relative flex h-3 w-3 flex-shrink-0">
+                        <span id="server-led-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span id="server-led-dot" class="relative inline-flex rounded-full h-3 w-3 led-glow-amber"></span>
+                    </span>
+                    <div class="text-left">
+                        <span id="server-status-label" class="block text-[11px] font-extrabold tracking-wider uppercase text-amber-300 leading-none">
+                            CONECTANDO...
+                        </span>
+                        <span id="server-status-sub" class="block text-[9px] font-medium text-slate-300 leading-tight mt-0.5">
+                            Google Apps Script
+                        </span>
+                    </div>
+                </button>
+
+                <!-- Filtro de Status -->
+                <div class="top-glass-pill rounded-2xl px-4 py-2 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-sky-400">
+                        <i class="fa-solid fa-filter text-xs"></i>
+                    </div>
+                    <div class="text-left">
+                        <span class="block text-[10px] font-medium text-slate-400 leading-tight">Filtrar Licenças</span>
+                        <div class="flex items-center gap-1.5">
+                            <select id="status-filter" class="bg-transparent text-white font-extrabold text-sm cursor-pointer focus:outline-none pr-1" onchange="renderDashboard()">
+                                <option value="TODOS" class="bg-[#0b1022] text-white">Todos os Clientes</option>
+                                <option value="ATIVO" class="bg-[#0b1022] text-emerald-400">Somente Ativos (Verde)</option>
+                                <option value="OFF" class="bg-[#0b1022] text-red-400">Bloqueados / OFF (Vermelho)</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down text-slate-300 text-[10px] pointer-events-none"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botão Engrenagem (Configurar Apps Script URL, Portal e PIX) -->
+                <button onclick="openConfigModal()" title="Configurar URL do Apps Script, Portal e PIX" class="top-glass-pill w-11 h-11 rounded-full flex items-center justify-center text-white hover:border-fn-neon/50 active:scale-90 transition-all">
+                    <i class="fa-solid fa-gear text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- HERO CARD DE RECEITA MENSAL RECORRENTE (MRR) -->
+        <section class="w-full max-w-3xl mx-auto px-4 sm:px-6 mt-2 mb-7">
+            <div class="hero-profit-box px-5 py-5 sm:px-9 sm:py-7 flex items-center justify-between gap-4">
+
+                <div class="bolt-orb w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-sack-dollar text-2xl sm:text-3xl text-fn-neon"></i>
+                </div>
+
+                <div class="flex-1 text-center min-w-0">
+                    <div class="inline-flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-slate-200 mb-1">
+                        <i class="fa-solid fa-arrow-trend-up text-fn-neon"></i>
+                        <span id="hero-month-title">RECEITA MENSAL ATIVA (MRR)</span>
+                    </div>
+
+                    <div class="my-1 flex items-baseline justify-center gap-1.5 sm:gap-2">
+                        <span class="text-2xl sm:text-4xl font-extrabold text-slate-100">R$</span>
+                        <span id="total-revenue-display" class="tabular-nums text-4xl sm:text-6xl font-black text-fn-neon tracking-tight">
+                            0,00
+                        </span>
+                    </div>
+
+                    <div class="mt-2 inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[11px] sm:text-xs text-slate-200 font-medium">
+                        <span class="w-4 h-4 rounded-full bg-fn-neon text-slate-950 flex items-center justify-center text-[9px] font-black">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        <span id="month-subtitle-display">0 ativos • R$ 0,00 total cadastrado</span>
+                    </div>
+                </div>
+
+                <div class="hidden sm:flex items-center justify-center flex-shrink-0 w-24 h-20">
+                    <svg viewBox="0 0 110 80" class="w-full h-full" fill="none">
+                        <rect x="8" y="54" width="12" height="20" rx="2" fill="#39FF4D" fill-opacity="0.5"/>
+                        <rect x="26" y="45" width="12" height="29" rx="2" fill="#39FF4D" fill-opacity="0.65"/>
+                        <rect x="44" y="36" width="12" height="38" rx="2" fill="#39FF4D" fill-opacity="0.75"/>
+                        <rect x="62" y="26" width="12" height="48" rx="2" fill="#39FF4D" fill-opacity="0.88"/>
+                        <rect x="80" y="16" width="12" height="58" rx="2" fill="#39FF4D"/>
+                        <path d="M10 48C34 42 62 28 94 8" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+                        <path d="M84 7H96V19" stroke="#38BDF8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- BARRA CLIENTES & LICENÇAS + BUSCA -->
+        <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-12">
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <i class="fa-solid fa-users text-sky-400 text-lg"></i>
+                    <h2 class="text-lg sm:text-xl font-extrabold text-white tracking-tight">Assinantes & Licenças</h2>
+                    <span id="cards-count-badge" class="tabular-nums text-[11px] font-bold bg-white/10 text-slate-300 px-2.5 py-0.5 rounded-full border border-white/10">0</span>
+                    <span class="text-[11px] text-emerald-300 bg-emerald-500/10 border border-emerald-400/25 px-2.5 py-0.5 rounded-full font-medium">
+                        <i class="fa-brands fa-whatsapp mr-1"></i>Clique no nome para cobrar no WhatsApp
+                    </span>
+                </div>
+
+                <!-- Campo de Busca -->
+                <div class="relative w-full sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                    <input 
+                        type="text" 
+                        id="search-client-input" 
+                        oninput="renderDashboard()" 
+                        placeholder="Buscar assinante..." 
+                        class="w-full bg-white/[0.06] border border-white/15 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400/60"
+                    >
+                </div>
+            </div>
+
+            <!-- GRADE DE CARDS DOS CLIENTES -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="cards-container">
+            </div>
+        </main>
+    </div>
+
+    <!-- RODAPÉ -->
+    <footer class="relative z-10 w-full mt-auto">
+        <div class="bottom-neon-line"></div>
+        <div class="py-4 px-4 text-center flex items-center justify-center gap-2 text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-slate-300 uppercase">
+            <i class="fa-solid fa-robot text-fn-neon text-xs"></i>
+            <span>FLOWNEST(IA) <span class="mx-1.5 text-slate-500">•</span> AUTOMAÇÃO INTELIGENTE <span class="mx-1.5 text-slate-500">•</span> CONTROLE SAAS</span>
+        </div>
+    </footer>
+
+    <!-- MODAL DE DETALHES E EDIÇÃO DO ASSINANTE -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+    <div class="bottom-sheet" id="bottom-sheet">
+        <div class="modal-pill"></div>
+
+        <div class="flex justify-between items-start mb-4 gap-3">
+            <div class="pr-2">
+                <h3 id="modal-cliente-nome" class="text-2xl font-extrabold capitalize leading-tight tracking-tight text-white break-words">Cliente</h3>
+                <p id="modal-empresa-sub" class="text-xs text-slate-400 font-medium mt-0.5">Assinatura FlowNest(IA)</p>
+                <p id="modal-vencimento-text" class="text-xs font-semibold text-sky-300 mt-1.5 flex items-center gap-1.5">
+                    <i class="fa-regular fa-calendar text-[11px]"></i>
+                    <span>Vencimento: --</span>
+                </p>
+            </div>
+            <div class="flex items-center gap-2 flex-shrink-0">
+                <span id="modal-status" class="text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">ATIVO</span>
+                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTROLE DE ACESSO RÁPIDO (BOTÃO VERDE ATIVAR / BOTÃO VERMELHO BLOQUEAR) -->
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 mb-4">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block mb-2.5">
+                Controle de Licença (Aba Login -> Status)
+            </span>
+            <div class="grid grid-cols-2 gap-2.5">
+                <button id="modal-btn-ativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500 hover:text-slate-950">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Ativar (ATIVO)</span>
+                </button>
+                <button id="modal-btn-desativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-red-500/20 text-red-300 border border-red-500/50 hover:bg-red-500 hover:text-white">
+                    <i class="fa-solid fa-ban"></i>
+                    <span>Bloquear (OFF)</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- EDIÇÃO DE DIA DE VENCIMENTO E VALOR DA MENSALIDADE -->
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 space-y-3 mb-4">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-400 block border-b border-white/10 pb-2">
+                <i class="fa-solid fa-pen-to-square mr-1"></i> Editar Dados na Planilha (Aba pagamento)
+            </span>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Dia do Vencimento (1 a 31)</label>
+                    <input type="number" id="edit-dia-vencimento" min="1" max="31" placeholder="Ex: 10" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-sm font-bold text-white focus:outline-none focus:border-fn-neon tabular-nums">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Mensalidade (R$)</label>
+                    <input type="number" id="edit-valor-mensalidade" step="0.01" min="0" placeholder="Ex: 49.90" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-sm font-bold text-fn-neon focus:outline-none focus:border-fn-neon tabular-nums">
+                </div>
+            </div>
+
+            <button id="modal-btn-salvar-edicao" class="w-full py-3 bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>Salvar Alterações na Planilha</span>
+            </button>
+        </div>
+
+        <!-- RESUMO DE DADOS DE ACESSO -->
+        <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 space-y-2 text-xs mb-4">
+            <div class="flex justify-between items-center text-slate-300">
+                <span>Senha / Chave de Login:</span>
+                <span id="modal-senha-login" class="font-mono font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded">--</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-300">
+                <span>Telefone / WhatsApp:</span>
+                <span id="modal-telefone" class="font-semibold text-white">--</span>
+            </div>
+        </div>
+
+        <!-- Botões de Ação Rápida de Cobrança -->
+        <div class="grid grid-cols-1 gap-2.5">
+            <button id="modal-whatsapp-share-btn" class="w-full py-3.5 bg-[#25D366] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 shadow-lg">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+                <span>Enviar Cobrança PNG + Mensagem</span>
+            </button>
+            <button id="modal-download-only-btn" class="w-full py-3 bg-white/10 active:scale-[0.98] text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2">
+                <i class="fa-solid fa-download text-xs"></i>
+                <span>Apenas Baixar Fatura PNG</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÃO (ENGRENAGEM - APPS SCRIPT URL, PORTAL & PIX) -->
+    <div class="modal-overlay" id="config-overlay" onclick="closeConfigModal()"></div>
+    <div class="bottom-sheet" id="config-sheet">
+        <div class="modal-pill"></div>
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-gear text-fn-neon"></i>
+                <h3 class="text-xl font-extrabold text-white">Configurações Locais</h3>
+            </div>
+            <button onclick="closeConfigModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <p class="text-[11px] text-emerald-300/90 bg-emerald-500/10 border border-emerald-500/25 rounded-xl px-3 py-2 mb-4 leading-relaxed">
+            <i class="fa-solid fa-shield-halved mr-1"></i>
+            Todos os dados abaixo ficam salvos <strong>somente na memória deste navegador</strong> (localStorage) e nunca são expostos no GitHub.
+        </p>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-[11px] font-bold text-fn-neon uppercase mb-1.5">
+                    <i class="fa-solid fa-link mr-1"></i> URL do Google Apps Script (Web App)
+                </label>
+                <input type="url" id="input-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-fn-neon">
+                <p class="text-[10px] text-slate-400 mt-1">Cole a URL da implantação do Apps Script para ler e editar status, datas e valores.</p>
+            </div>
+
+            <div class="border-t border-white/10 pt-3">
+                <label class="block text-[11px] font-bold text-sky-400 uppercase mb-1.5">
+                    <i class="fa-solid fa-globe mr-1"></i> Link de Acesso do Sistema (Enviado no WhatsApp)
+                </label>
+                <input type="url" id="input-portal-url" placeholder="https://seusistema.com.br" class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+            </div>
+
+            <div class="border-t border-white/10 pt-3">
+                <span class="block text-xs font-extrabold text-amber-400 uppercase tracking-wider mb-2.5">
+                    <i class="fa-brands fa-pix mr-1"></i> Código PIX Oficial (Copia e Cola)
+                </span>
+
+                <div class="space-y-2.5">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Cole aqui seu Código PIX Copia e Cola</label>
+                        <textarea id="input-pix-code" rows="3" placeholder="00020126330014br.gov.bcb.pix..." class="w-full bg-white/5 border border-white/15 rounded-xl px-3.5 py-2 text-xs text-white font-mono focus:outline-none focus:border-fn-neon"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-300 uppercase mb-1">Comportamento do QR Code PIX</label>
+                        <select id="input-pix-mode" class="w-full bg-[#182240] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white font-semibold focus:outline-none focus:border-fn-neon">
+                            <option value="official_with_amount">Injetar Valor da Mensalidade no PIX Automaticamente</option>
+                            <option value="official_exact">Usar Código PIX Oficial Exato (Sem valor fixo)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveAppConfig()" class="flex-1 py-3 bg-emerald-500 text-slate-950 font-extrabold rounded-xl text-xs uppercase tracking-wider">
+                    Salvar no Navegador
+                </button>
+                <button onclick="clearAppConfig()" class="py-3 px-4 bg-red-500/15 text-red-400 border border-red-500/30 font-bold rounded-xl text-xs uppercase">
+                    Apagar Tudo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================================
+           CONFIGURAÇÕES LIMPA PARA GITHUB PAGES (SEM DADOS SENSÍVEIS)
+           ===================================================================== */
+        const DEFAULT_APPSCRIPT_URL = '';
+        const DEFAULT_PORTAL_URL = '';
+        const DEFAULT_PIX_CODE = '';
+
+        const STORAGE_APPSCRIPT_URL = 'flownest_appscript_url_v1';
+        const STORAGE_PORTAL_URL = 'flownest_portal_url_v1';
+        const STORAGE_PIX_CODE = 'flownest_pix_code_v1';
+        const STORAGE_PIX_MODE = 'flownest_pix_mode_v1';
+
+        const NATIVE_MONTHS = [
+            'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+            'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+        ];
+
+        const AVATAR_COLORS = [
+            'bg-blue-600 text-white',
+            'bg-violet-600 text-white',
+            'bg-teal-600 text-white',
+            'bg-amber-500 text-white',
+            'bg-emerald-600 text-white',
+            'bg-purple-600 text-white',
+            'bg-sky-600 text-white',
+            'bg-indigo-600 text-white'
+        ];
+
+        let globalClientsList = [];
+        let currentOpenedIndex = -1;
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        window.onload = () => {
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) {
+                showConfigScreen('Clique no botão abaixo para configurar a URL do Apps Script e seu Código PIX na memória deste navegador.');
+                setApiLedStatus('offline', 'SEM CONFIGURAÇÃO', 'Configure na engrenagem');
+            } else {
+                loadAdminData(false);
+            }
+        };
+
+        /* =====================================================================
+           GERENCIAMENTO DE CONFIGURAÇÕES LOCAIS (localStorage)
+           ===================================================================== */
+        function getAppScriptUrl() {
+            return (localStorage.getItem(STORAGE_APPSCRIPT_URL) || DEFAULT_APPSCRIPT_URL).trim();
+        }
+
+        function getPortalUrl() {
+            return (localStorage.getItem(STORAGE_PORTAL_URL) || DEFAULT_PORTAL_URL).trim();
+        }
+
+        function getStoredPixCode() {
+            return (localStorage.getItem(STORAGE_PIX_CODE) || DEFAULT_PIX_CODE).trim();
+        }
+
+        function openConfigModal() {
+            document.getElementById('input-appscript-url').value = getAppScriptUrl();
+            document.getElementById('input-portal-url').value = getPortalUrl();
+            document.getElementById('input-pix-code').value = getStoredPixCode();
+            document.getElementById('input-pix-mode').value = localStorage.getItem(STORAGE_PIX_MODE) || 'official_with_amount';
+
+            const overlay = document.getElementById('config-overlay');
+            const sheet = document.getElementById('config-sheet');
+            overlay.style.display = 'block';
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                sheet.style.transform = 'translate(-50%, 0)';
+            });
+        }
+
+        function closeConfigModal() {
+            const overlay = document.getElementById('config-overlay');
+            const sheet = document.getElementById('config-sheet');
+            sheet.style.transform = 'translate(-50%, 100%)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        function saveAppConfig() {
+            const urlVal = document.getElementById('input-appscript-url').value.trim();
+            if (!urlVal || !urlVal.startsWith('http')) {
+                alert('Por favor, insira uma URL válida do Google Apps Script (começando com https://script.google.com/...).');
+                return;
+            }
+
+            const portalVal = document.getElementById('input-portal-url').value.trim();
+            const pixVal = document.getElementById('input-pix-code').value.trim();
+            const pixModeVal = document.getElementById('input-pix-mode').value || 'official_with_amount';
+
+            localStorage.setItem(STORAGE_APPSCRIPT_URL, urlVal);
+
+            if (portalVal) {
+                localStorage.setItem(STORAGE_PORTAL_URL, portalVal);
+            } else {
+                localStorage.removeItem(STORAGE_PORTAL_URL);
+            }
+
+            if (pixVal) {
+                localStorage.setItem(STORAGE_PIX_CODE, pixVal);
+            } else {
+                localStorage.removeItem(STORAGE_PIX_CODE);
+            }
+
+            localStorage.setItem(STORAGE_PIX_MODE, pixModeVal);
+
+            closeConfigModal();
+            location.reload();
+        }
+
+        function clearAppConfig() {
+            if (confirm('Deseja apagar a URL do Apps Script, o link do portal e o código PIX salvos neste navegador?')) {
+                localStorage.removeItem(STORAGE_APPSCRIPT_URL);
+                localStorage.removeItem(STORAGE_PORTAL_URL);
+                localStorage.removeItem(STORAGE_PIX_CODE);
+                localStorage.removeItem(STORAGE_PIX_MODE);
+                location.reload();
+            }
+        }
+
+        function showConfigScreen(msg) {
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.style.display = 'flex';
+            loadingScreen.style.opacity = '1';
+            loadingScreen.innerHTML = `
+                <div class="text-center p-6 bg-[#111933] border border-sky-400/25 rounded-3xl max-w-sm mx-auto shadow-2xl">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-500/15 border border-sky-400/30 text-fn-neon flex items-center justify-center mx-auto mb-4">
+                        <i class="fa-solid fa-gear text-xl"></i>
+                    </div>
+                    <h3 class="text-white font-extrabold text-lg mb-2">Configurar Painel Local</h3>
+                    <p class="text-xs text-slate-300 mb-5 leading-relaxed font-normal">${escapeHtml(msg)}</p>
+                    <button onclick="openConfigModal()" class="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl text-xs font-extrabold uppercase tracking-wider">Configurar Agora</button>
+                </div>
+            `;
+        }
+
+        function setApiLedStatus(state, title, sub) {
+            const pill = document.getElementById('server-status-pill');
+            const ledPing = document.getElementById('server-led-ping');
+            const ledDot = document.getElementById('server-led-dot');
+            const statusLabel = document.getElementById('server-status-label');
+            const statusSub = document.getElementById('server-status-sub');
+
+            statusLabel.innerText = title;
+            statusSub.innerText = sub;
+
+            if (state === 'online') {
+                pill.className = 'server-pill-online rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer';
+                ledPing.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80';
+                ledDot.className = 'relative inline-flex rounded-full h-3 w-3 led-glow-green';
+                statusLabel.className = 'block text-[11px] font-extrabold tracking-wider uppercase text-fn-neon leading-none';
+            } else if (state === 'offline') {
+                pill.className = 'server-pill-offline rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer';
+                ledPing.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-85';
+                ledDot.className = 'relative inline-flex rounded-full h-3 w-3 led-glow-red';
+                statusLabel.className = 'block text-[11px] font-extrabold tracking-wider uppercase text-red-400 leading-none';
+            } else {
+                pill.className = 'server-pill-checking rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer';
+                ledPing.className = 'animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75';
+                ledDot.className = 'relative inline-flex rounded-full h-3 w-3 led-glow-amber';
+                statusLabel.className = 'block text-[11px] font-extrabold tracking-wider uppercase text-amber-300 leading-none';
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.add('show');
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        /* =====================================================================
+           CÁLCULO INTELIGENTE DE VENCIMENTO (MÊS ATUAL)
+           ===================================================================== */
+        function buildDueDateInfo(dueDay, isAtivo) {
+            const dayNum = parseInt(dueDay, 10);
+            if (!dayNum || isNaN(dayNum) || dayNum < 1 || dayNum > 31) {
+                return {
+                    shortLabel: 'Vencimento: Não definido',
+                    fullLabel: 'Dia de vencimento não definido',
+                    fullDateSlash: '--/--/----',
+                    whatsappDayLabel: 'A combinar',
+                    textClass: 'text-slate-400',
+                    modalClass: 'text-slate-400'
+                };
+            }
+
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const year = now.getFullYear();
+            const monthIdx = now.getMonth();
+
+            const maxDaysInMonth = new Date(year, monthIdx + 1, 0).getDate();
+            const validDay = Math.min(dayNum, maxDaysInMonth);
+            const dueDateObj = new Date(year, monthIdx, validDay);
+
+            const dayPadded = String(validDay).padStart(2, '0');
+            const monthPadded = String(monthIdx + 1).padStart(2, '0');
+            const formattedDate = `${dayPadded}/${monthPadded}`;
+            const fullDateSlash = `${dayPadded}/${monthPadded}/${year}`;
+
+            const diffDays = Math.round((dueDateObj.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+            if (!isAtivo) {
+                return {
+                    shortLabel: `Todo dia ${dayPadded} (${formattedDate}) • Bloqueado`,
+                    fullLabel: `Vencimento: Dia ${dayPadded} (${fullDateSlash})`,
+                    fullDateSlash: fullDateSlash,
+                    whatsappDayLabel: `Dia ${dayPadded}`,
+                    textClass: 'text-red-400',
+                    modalClass: 'text-red-400'
+                };
+            }
+
+            if (diffDays < 0) {
+                return {
+                    shortLabel: `Todo dia ${dayPadded} (${formattedDate} - Vencido)`,
+                    fullLabel: `Venceu em ${fullDateSlash}`,
+                    fullDateSlash: fullDateSlash,
+                    whatsappDayLabel: `Dia ${dayPadded}`,
+                    textClass: 'text-amber-300',
+                    modalClass: 'text-amber-300'
+                };
+            } else if (diffDays === 0) {
+                return {
+                    shortLabel: `Todo dia ${dayPadded} (Vence Hoje!)`,
+                    fullLabel: `Vence hoje (${fullDateSlash})`,
+                    fullDateSlash: fullDateSlash,
+                    whatsappDayLabel: `Dia ${dayPadded}`,
+                    textClass: 'text-amber-300',
+                    modalClass: 'text-amber-300'
+                };
+            } else {
+                return {
+                    shortLabel: `Todo dia ${dayPadded} (Próx: ${formattedDate})`,
+                    fullLabel: `Próximo vencimento: ${fullDateSlash}`,
+                    fullDateSlash: fullDateSlash,
+                    whatsappDayLabel: `Dia ${dayPadded}`,
+                    textClass: 'text-sky-300',
+                    modalClass: 'text-sky-300'
+                };
+            }
+        }
+
+        /* =====================================================================
+           LEITURA DE DADOS DO GOOGLE APPS SCRIPT (ABAS LOGIN + PAGAMENTO)
+           ===================================================================== */
+        async function loadAdminData(manual = false) {
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) return;
+
+            setApiLedStatus('checking', 'SINCRONIZANDO...', 'Lendo planilha...');
+            if (manual) showToast('Atualizando dados da planilha...');
+
+            try {
+                const separator = scriptUrl.includes('?') ? '&' : '?';
+                const response = await fetch(`${scriptUrl}${separator}action=adminDashboard&t=${Date.now()}`);
+                const data = await response.json();
+
+                if (data.status !== 'success') {
+                    throw new Error(data.message || 'Resposta inválida do Apps Script.');
+                }
+
+                globalClientsList = (data.clientes || []).map(c => {
+                    const isAtivo = String(c.status || '').trim().toUpperCase() === 'ATIVO';
+                    const valorNum = Number(c.valor || 0);
+                    const diaVenc = c.diaVencimento ? parseInt(c.diaVencimento, 10) : '';
+
+                    return {
+                        cliente: String(c.cliente || '').trim(),
+                        primeiroNome: String(c.primeiroNome || c.cliente || '').trim(),
+                        empresa: String(c.empresa || '').trim(),
+                        telefone: String(c.telefone || '').trim(),
+                        diaVencimento: diaVenc,
+                        valorNum: valorNum,
+                        valorStr: valorNum.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        status: isAtivo ? 'ATIVO' : 'OFF',
+                        isAtivo: isAtivo,
+                        dueInfo: buildDueDateInfo(diaVenc, isAtivo)
+                    };
+                });
+
+                renderDashboard();
+
+                const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                setApiLedStatus('online', 'API CONECTADA', `Atualizado às ${horaAtual}`);
+
+                const loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
+
+                if (manual) showToast('Planilha sincronizada com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao carregar Apps Script:', error);
+                setApiLedStatus('offline', 'ERRO NA API', 'Verifique a URL');
+                showConfigScreen(`Não foi possível conectar ao Apps Script: ${error.message}. Verifique se a implantação está como "Qualquer pessoa" e cole a URL /exec.`);
+            }
+        }
+
+        /* =====================================================================
+           ALTERAR STATUS (BOTÃO VERDE ATIVO / BOTÃO VERMELHO OFF)
+           ===================================================================== */
+        async function toggleClientStatus(index, targetStatus) {
+            const client = globalClientsList[index];
+            if (!client) return;
+
+            const novoStatus = targetStatus || (client.isAtivo ? 'OFF' : 'ATIVO');
+            if (client.status === novoStatus) {
+                showToast(`${client.cliente} já está com status ${novoStatus}.`);
+                return;
+            }
+
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) return;
+
+            const prevStatus = client.status;
+            const prevAtivo = client.isAtivo;
+
+            client.status = novoStatus;
+            client.isAtivo = (novoStatus === 'ATIVO');
+            client.dueInfo = buildDueDateInfo(client.diaVencimento, client.isAtivo);
+            renderDashboard();
+
+            if (currentOpenedIndex === index) {
+                updateModalHeaderState(client);
+            }
+
+            showToast(novoStatus === 'ATIVO'
+                ? `Ativando licença de ${client.cliente}...`
+                : `Bloqueando (OFF) acesso de ${client.cliente}...`
+            );
+
+            try {
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'atualizarClienteAdmin',
+                        cliente: client.cliente,
+                        primeiroNome: client.primeiroNome,
+                        status: novoStatus
+                    })
+                });
+                const result = await res.json();
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Falha ao salvar status');
+                }
+
+                showToast(novoStatus === 'ATIVO'
+                    ? `✅ ${client.cliente} ATIVO na aba Login!`
+                    : `🔴 ${client.cliente} definido como OFF na aba Login!`
+                );
+            } catch (err) {
+                client.status = prevStatus;
+                client.isAtivo = prevAtivo;
+                client.dueInfo = buildDueDateInfo(client.diaVencimento, client.isAtivo);
+                renderDashboard();
+                if (currentOpenedIndex === index) updateModalHeaderState(client);
+                showToast('Erro ao salvar status na planilha: ' + err.message);
+            }
+        }
+
+        /* =====================================================================
+           SALVAR EDIÇÃO DE DIA DE VENCIMENTO E VALOR NA PLANILHA
+           ===================================================================== */
+        async function saveClientEdits(index) {
+            const client = globalClientsList[index];
+            if (!client) return;
+
+            const diaInput = document.getElementById('edit-dia-vencimento').value.trim();
+            const valorInput = document.getElementById('edit-valor-mensalidade').value.trim();
+
+            const novoDia = diaInput ? parseInt(diaInput, 10) : '';
+            const novoValor = valorInput !== '' ? parseFloat(valorInput) : 0;
+
+            if (novoDia !== '' && (isNaN(novoDia) || novoDia < 1 || novoDia > 31)) {
+                alert('Informe um dia do mês válido entre 1 e 31.');
+                return;
+            }
+            if (isNaN(novoValor) || novoValor < 0) {
+                alert('Informe um valor em reais válido.');
+                return;
+            }
+
+            const btn = document.getElementById('modal-btn-salvar-edicao');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Salvando na Planilha...</span>`;
+
+            try {
+                const scriptUrl = getAppScriptUrl();
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'atualizarClienteAdmin',
+                        cliente: client.cliente,
+                        primeiroNome: client.primeiroNome,
+                        diaVencimento: novoDia,
+                        valor: novoValor
+                    })
+                });
+                const result = await res.json();
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Erro ao atualizar planilha');
+                }
+
+                client.diaVencimento = novoDia;
+                client.valorNum = novoValor;
+                client.valorStr = novoValor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                client.dueInfo = buildDueDateInfo(novoDia, client.isAtivo);
+
+                renderDashboard();
+                updateModalHeaderState(client);
+                showToast(`✅ Dados de ${client.cliente} atualizados na aba pagamento!`);
+
+            } catch (err) {
+                showToast('Erro ao salvar alterações: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        /* =====================================================================
+           RENDERIZAÇÃO DO DASHBOARD E CARDS
+           ===================================================================== */
+        function renderDashboard() {
+            const container = document.getElementById('cards-container');
+            const searchQuery = (document.getElementById('search-client-input')?.value || '').trim().toLowerCase();
+            const statusFilter = document.getElementById('status-filter')?.value || 'TODOS';
+
+            let totalAtivo = 0;
+            let totalGeral = 0;
+            let countAtivos = 0;
+
+            globalClientsList.forEach(c => {
+                totalGeral += c.valorNum;
+                if (c.isAtivo) {
+                    totalAtivo += c.valorNum;
+                    countAtivos++;
+                }
+            });
+
+            document.getElementById('total-revenue-display').innerText = totalAtivo.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const totalGeralFmt = totalGeral.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            document.getElementById('month-subtitle-display').innerText = `${countAtivos} de ${globalClientsList.length} ativos • Total cadastrado: ${totalGeralFmt}`;
+
+            const visibleCards = globalClientsList
+                .map((item, originalIndex) => ({ item, originalIndex }))
+                .filter(({ item }) => {
+                    const matchSearch = !searchQuery ||
+                        item.cliente.toLowerCase().includes(searchQuery) ||
+                        item.empresa.toLowerCase().includes(searchQuery);
+                    const matchStatus = statusFilter === 'TODOS' || item.status === statusFilter;
+                    return matchSearch && matchStatus;
+                });
+
+            document.getElementById('cards-count-badge').innerText = visibleCards.length;
+
+            if (visibleCards.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full p-10 text-center bg-white/[0.04] border border-white/10 rounded-3xl my-2">
+                        <i class="fa-solid fa-folder-open text-2xl text-slate-500 mb-3"></i>
+                        <p class="text-sm text-slate-300 font-medium">Nenhum assinante encontrado com os filtros atuais.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let htmlBuffer = '';
+            visibleCards.forEach(({ item, originalIndex }) => {
+                const initialLetter = escapeHtml((item.cliente.trim()[0] || 'C').toUpperCase());
+                const safeClientName = escapeHtml(item.cliente);
+                const avatarStyle = AVATAR_COLORS[originalIndex % AVATAR_COLORS.length];
+
+                const statusPillHtml = item.isAtivo
+                    ? `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+                            <span class="w-2 h-2 rounded-full bg-fn-neon shadow-[0_0_8px_#39ff4d]"></span>
+                            ATIVO
+                       </span>`
+                    : `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/15 text-red-300 border border-red-500/40">
+                            <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></span>
+                            OFF
+                       </span>`;
+
+                htmlBuffer += `
+                    <div class="client-dark-card p-4">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                <div class="w-9 h-9 rounded-full ${avatarStyle} flex items-center justify-center font-extrabold text-sm flex-shrink-0">
+                                    ${initialLetter}
+                                </div>
+                                ${statusPillHtml}
+                            </div>
+
+                            <!-- NOME CLICÁVEL: GERA FATURA PNG E ENVIA NO WHATSAPP -->
+                            <button 
+                                onclick="shareOrDownloadInvoice(${originalIndex}, true)" 
+                                class="w-full text-left group flex items-center justify-between gap-2 mb-2 focus:outline-none active:scale-[0.98] transition-transform"
+                            >
+                                <h3 class="text-lg font-extrabold text-white group-hover:text-emerald-400 capitalize tracking-tight truncate">
+                                    ${safeClientName}
+                                </h3>
+                                <span class="w-7 h-7 rounded-full bg-[#25D366]/15 border border-[#25D366]/40 flex items-center justify-center text-xs text-[#25D366] flex-shrink-0">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </span>
+                            </button>
+
+                            <div class="space-y-1.5 text-xs text-slate-300 mb-3.5">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-laptop-code text-sky-400 text-xs w-3.5 text-center"></i>
+                                    <span class="truncate">Software: <strong class="text-slate-100 font-semibold">FlowNest (IA)</strong></span>
+                                </div>
+                                <div class="flex items-center gap-2 ${item.dueInfo.textClass} font-semibold">
+                                    <i class="fa-regular fa-calendar-check text-xs w-3.5 text-center"></i>
+                                    <span>${escapeHtml(item.dueInfo.shortLabel)}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- PAINEL DO VALOR DA MENSALIDADE -->
+                            <div class="inner-profit-panel flex items-center gap-3 mb-2.5">
+                                <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center flex-shrink-0">
+                                    <i class="fa-solid fa-money-bill-wave text-sky-400 text-base"></i>
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="block text-[11px] font-medium text-slate-300 leading-tight">Mensalidade</span>
+                                    <div class="tabular-nums text-xl sm:text-2xl font-black text-fn-neon tracking-tight leading-tight">${escapeHtml(item.valorStr)}</div>
+                                </div>
+                            </div>
+
+                            <!-- BOTÕES RÁPIDOS: VERDE (ATIVAR) / VERMELHO (DESATIVAR OFF) -->
+                            <div class="grid grid-cols-2 gap-2 mb-2.5">
+                                <button 
+                                    onclick="toggleClientStatus(${originalIndex}, 'ATIVO')" 
+                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 ${item.isAtivo ? 'bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)]' : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/35 hover:bg-emerald-500/25'}"
+                                >
+                                    <i class="fa-solid fa-check"></i>
+                                    <span>Ativar</span>
+                                </button>
+                                <button 
+                                    onclick="toggleClientStatus(${originalIndex}, 'OFF')" 
+                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 ${!item.isAtivo ? 'bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)]' : 'bg-red-500/15 text-red-300 border border-red-500/35 hover:bg-red-500/25'}"
+                                >
+                                    <i class="fa-solid fa-xmark"></i>
+                                    <span>Off</span>
+                                </button>
+                            </div>
+
+                            <!-- BOTÃO EDITAR / DETALHES -->
+                            <button onclick="openModal(${originalIndex})" class="btn-more-details">
+                                <i class="fa-solid fa-pen-to-square text-[11px]"></i>
+                                <span>Editar Vencimento / Valor</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = htmlBuffer;
+        }
+
+        /* =====================================================================
+           MODAL DE EDIÇÃO & DETALHES DO CLIENTE
+           ===================================================================== */
+        function updateModalHeaderState(client) {
+            const badge = document.getElementById('modal-status');
+            badge.innerText = client.isAtivo ? 'ATIVO' : 'OFF';
+            badge.className = `text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider ${
+                client.isAtivo
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                    : 'bg-red-500/20 text-red-300 border border-red-500/40'
+            }`;
+
+            const dueEl = document.getElementById('modal-vencimento-text');
+            dueEl.className = `text-xs font-semibold mt-1.5 flex items-center gap-1.5 ${client.dueInfo.modalClass}`;
+            dueEl.innerHTML = `<i class="fa-regular fa-calendar text-[11px]"></i><span>${escapeHtml(client.dueInfo.fullLabel)}</span>`;
+        }
+
+        function openModal(index) {
+            const client = globalClientsList[index];
+            if (!client) return;
+            currentOpenedIndex = index;
+
+            document.getElementById('modal-cliente-nome').innerText = client.cliente;
+            document.getElementById('modal-empresa-sub').innerText = client.empresa
+                ? `Empresa: ${client.empresa}`
+                : 'Licença Mensal FlowNest (IA)';
+
+            updateModalHeaderState(client);
+
+            document.getElementById('edit-dia-vencimento').value = client.diaVencimento || '';
+            document.getElementById('edit-valor-mensalidade').value = client.valorNum || '';
+
+            document.getElementById('modal-senha-login').innerText = client.primeiroNome || client.cliente;
+            document.getElementById('modal-telefone').innerText = client.telefone || 'Não cadastrado';
+
+            document.getElementById('modal-btn-ativar').onclick = () => toggleClientStatus(index, 'ATIVO');
+            document.getElementById('modal-btn-desativar').onclick = () => toggleClientStatus(index, 'OFF');
+            document.getElementById('modal-btn-salvar-edicao').onclick = () => saveClientEdits(index);
+            document.getElementById('modal-whatsapp-share-btn').onclick = () => shareOrDownloadInvoice(index, true);
+            document.getElementById('modal-download-only-btn').onclick = () => shareOrDownloadInvoice(index, false);
+
+            const overlay = document.getElementById('modal-overlay');
+            const sheet = document.getElementById('bottom-sheet');
+
+            overlay.style.display = 'block';
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                sheet.style.transform = 'translate(-50%, 0)';
+            });
+        }
+
+        function closeModal() {
+            currentOpenedIndex = -1;
+            const overlay = document.getElementById('modal-overlay');
+            const sheet = document.getElementById('bottom-sheet');
+
+            sheet.style.transform = 'translate(-50%, 100%)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        /* =====================================================================
+           MENSAGEM WHATSAPP FLOWNEST (IA)
+           ===================================================================== */
+        function getTimeGreeting() {
+            const hour = new Date().getHours();
+            if (hour >= 5 && hour < 12) return 'Bom Dia';
+            if (hour >= 12 && hour < 18) return 'Boa Tarde';
+            return 'Boa Noite';
+        }
+
+        function buildWhatsAppMessage(client) {
+            const greeting = getTimeGreeting();
+            const rawName = client.cliente.trim();
+            const firstName = rawName.split(/\s+/)[0];
+            const capFirstName = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+
+            const valorFormatado = client.valorNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const vencimentoDia = client.dueInfo.whatsappDayLabel;
+            const portalUrl = getPortalUrl();
+            const senhaAcesso = client.primeiroNome || capFirstName;
+            const linkLine = portalUrl ? `\n🔗 Link de acesso: *${portalUrl}*` : '';
+
+            return `*FlowNest(IA) 🤖*
+
+Opa, ${greeting} *${capFirstName}*! Tudo bem? 🚀
+
+Passando para enviar o resumo da sua assinatura mensal do sistema *FlowNest(IA)*! 💼
+
+Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
+
+📌 Valor da Mensalidade: *R$ ${valorFormatado}*${linkLine}
+🔑 Sua senha: *${senhaAcesso}*
+📆 Vencimento: *${vencimentoDia}*
+
+*O QR Code PIX já está na fatura em anexo. Qualquer dúvida, é só me chamar por aqui!* 🤝`;
+        }
+
+        /* =====================================================================
+           GERADOR DE PAYLOAD PIX (CRC16 BCB - LENDO DO LOCALSTORAGE)
+           ===================================================================== */
+        function calculateCRC16(payloadWithoutCrc) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < payloadWithoutCrc.length; i++) {
+                crc ^= payloadWithoutCrc.charCodeAt(i) << 8;
+                for (let j = 0; j < 8; j++) {
+                    if ((crc & 0x8000) !== 0) {
+                        crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+                    } else {
+                        crc = (crc << 1) & 0xFFFF;
+                    }
+                }
+            }
+            return crc.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function getFinalPixPayload(amount) {
+            const basePix = getStoredPixCode();
+            if (!basePix) return '';
+
+            const pixMode = localStorage.getItem(STORAGE_PIX_MODE) || 'official_with_amount';
+
+            if (pixMode === 'official_exact' || !amount || amount <= 0) {
+                return basePix;
+            }
+
+            try {
+                let idx = 0;
+                const tags = [];
+                while (idx < basePix.length - 4) {
+                    const id = basePix.substring(idx, idx + 2);
+                    const len = parseInt(basePix.substring(idx + 2, idx + 4), 10);
+                    if (isNaN(len)) return basePix;
+                    const val = basePix.substring(idx + 4, idx + 4 + len);
+                    if (id !== '63' && id !== '54') {
+                        tags.push({ id, val });
+                    }
+                    idx += 4 + len;
+                }
+
+                const amountStr = amount.toFixed(2);
+                let rebuilt = '';
+                let amountInserted = false;
+
+                for (const t of tags) {
+                    if (!amountInserted && parseInt(t.id, 10) > 54) {
+                        rebuilt += `54${String(amountStr.length).padStart(2, '0')}${amountStr}`;
+                        amountInserted = true;
+                    }
+                    rebuilt += `${t.id}${String(t.val.length).padStart(2, '0')}${t.val}`;
+                }
+
+                rebuilt += '6304';
+                return rebuilt + calculateCRC16(rebuilt);
+            } catch (e) {
+                return basePix;
+            }
+        }
+
+        /* =====================================================================
+           GERAÇÃO DA FATURA PNG FLOWNEST(IA) COM QR CODE PIX
+           ===================================================================== */
+        function roundRectPath(ctx, x, y, w, h, r) {
+            if (typeof r === 'number') r = { tl: r, tr: r, br: r, bl: r };
+            ctx.beginPath();
+            ctx.moveTo(x + r.tl, y);
+            ctx.lineTo(x + w - r.tr, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r.tr);
+            ctx.lineTo(x + w, y + h - r.br);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r.br, y + h);
+            ctx.lineTo(x + r.bl, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r.bl);
+            ctx.lineTo(x, y + r.tl);
+            ctx.quadraticCurveTo(x, y, x + r.tl, y);
+            ctx.closePath();
+        }
+
+        async function renderInvoiceCanvas(client, finalPixString) {
+            if (document.fonts && document.fonts.ready) {
+                await document.fonts.ready;
+            }
+
+            const canvas = document.createElement('canvas');
+            const W = 800;
+            const H = 1120;
+            canvas.width = W;
+            canvas.height = H;
+            const ctx = canvas.getContext('2d');
+
+            // Fundo claro moderno SaaS
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+            bgGrad.addColorStop(0, '#dbeafe');
+            bgGrad.addColorStop(0.22, '#eff6ff');
+            bgGrad.addColorStop(0.60, '#f8fafc');
+            bgGrad.addColorStop(1, '#e2e8f0');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, W, H);
+
+            // Detalhe geométrico tech no topo direito
+            ctx.save();
+            ctx.fillStyle = 'rgba(14, 165, 233, 0.12)';
+            ctx.beginPath();
+            ctx.arc(730, 70, 180, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Ícone Logo FlowNest(IA)
+            const logoCx = 96, logoCy = 96, logoR = 56;
+            roundRectPath(ctx, logoCx - logoR, logoCy - logoR, logoR * 2, logoR * 2, 28);
+            const logoGrad = ctx.createLinearGradient(logoCx - logoR, logoCy - logoR, logoCx + logoR, logoCy + logoR);
+            logoGrad.addColorStop(0, '#022c54');
+            logoGrad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = logoGrad;
+            ctx.fill();
+
+            // Símbolo camadas/IA dentro do logo
+            ctx.strokeStyle = '#39ff4d';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(96, 66);
+            ctx.lineTo(126, 82);
+            ctx.lineTo(96, 98);
+            ctx.lineTo(66, 82);
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.moveTo(66, 98);
+            ctx.lineTo(96, 114);
+            ctx.lineTo(126, 98);
+            ctx.moveTo(66, 113);
+            ctx.lineTo(96, 129);
+            ctx.lineTo(126, 113);
+            ctx.stroke();
+
+            // Título FlowNest(IA)
+            ctx.font = '900 50px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#0f172a';
+            ctx.fillText('FlowNest', 175, 106);
+            const fnWidth = ctx.measureText('FlowNest').width;
+            ctx.fillStyle = '#0284c7';
+            ctx.fillText('(IA)', 175 + fnWidth + 4, 106);
+
+            ctx.font = '600 20px Inter, sans-serif';
+            ctx.fillStyle = '#334155';
+            ctx.fillText('Gestão Inteligente de Orçamentos & Negócios', 177, 138);
+
+            // Card 1: Dados do Assinante e Plano
+            const card1Y = 185, card1H = 104;
+            roundRectPath(ctx, 28, card1Y, 744, card1H, 22);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.fillStyle = '#0f2942';
+            ctx.beginPath();
+            ctx.arc(76, card1Y + 36, 13, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(76, card1Y + 74, 23, Math.PI, 0);
+            ctx.fill();
+
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(118, card1Y + 20);
+            ctx.lineTo(118, card1Y + 84);
+            ctx.stroke();
+
+            ctx.fillStyle = '#64748b';
+            ctx.font = '700 17px Inter, sans-serif';
+            ctx.fillText('Assinante:', 138, card1Y + 39);
+
+            const capClientName = client.cliente
+                .toLowerCase()
+                .split(' ')
+                .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(' ');
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 25px Inter, sans-serif';
+            ctx.fillText(capClientName.substring(0, 24), 138, card1Y + 74);
+
+            ctx.beginPath();
+            ctx.moveTo(475, card1Y + 20);
+            ctx.lineTo(475, card1Y + 84);
+            ctx.stroke();
+
+            ctx.fillStyle = '#64748b';
+            ctx.font = '700 17px Inter, sans-serif';
+            ctx.fillText('Licença:', 500, card1Y + 39);
+            ctx.fillStyle = '#0284c7';
+            ctx.font = '800 24px Inter, sans-serif';
+            ctx.fillText('Plano Mensal SaaS', 500, card1Y + 74);
+
+            // Card 2: Detalhes da Assinatura
+            const card2Y = 308, card2H = 220;
+            roundRectPath(ctx, 28, card2Y, 744, card2H, 24);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.strokeStyle = '#93c5fd';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            roundRectPath(ctx, 28, card2Y, 744, 64, { tl: 24, tr: 24, br: 0, bl: 0 });
+            const headerBlue = ctx.createLinearGradient(28, card2Y, 772, card2Y);
+            headerBlue.addColorStop(0, '#022c54');
+            headerBlue.addColorStop(1, '#0369a1');
+            ctx.fillStyle = headerBlue;
+            ctx.fill();
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 26px Inter, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Detalhes da Mensalidade', 54, card2Y + 42);
+
+            const mesAtualNome = NATIVE_MONTHS[new Date().getMonth()];
+            const capMesAtual = mesAtualNome.charAt(0).toUpperCase() + mesAtualNome.slice(1);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '700 22px Inter, sans-serif';
+            ctx.fillText(`Assinatura FlowNest(IA) — Ref. ${capMesAtual}`, 52, card2Y + 106);
+            ctx.fillText('Suporte Técnico & Hospedagem em Nuvem', 52, card2Y + 144);
+
+            ctx.textAlign = 'right';
+            ctx.font = '800 23px Inter, sans-serif';
+            ctx.fillText(client.valorStr, 744, card2Y + 106);
+            ctx.fillStyle = '#16a34a';
+            ctx.fillText('Incluso', 744, card2Y + 144);
+
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(46, card2Y + 164);
+            ctx.lineTo(754, card2Y + 164);
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '800 25px Inter, sans-serif';
+            ctx.fillText('Total da Fatura', 52, card2Y + 202);
+
+            ctx.textAlign = 'right';
+            ctx.font = '900 27px Inter, sans-serif';
+            ctx.fillText(client.valorStr, 744, card2Y + 202);
+
+            // Card 3: Destaque Valor a Pagar
+            const netBoxY = 548, netBoxH = 148;
+            roundRectPath(ctx, 28, netBoxY, 744, netBoxH, 24);
+            const navyGrad = ctx.createLinearGradient(28, netBoxY, 772, netBoxY + netBoxH);
+            navyGrad.addColorStop(0, '#022c54');
+            navyGrad.addColorStop(1, '#04427a');
+            ctx.fillStyle = navyGrad;
+            ctx.fill();
+
+            ctx.fillStyle = '#39ff4d';
+            ctx.beginPath();
+            ctx.arc(88, netBoxY + 74, 30, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#022c54';
+            ctx.lineWidth = 6;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.beginPath();
+            ctx.moveTo(75, netBoxY + 74);
+            ctx.lineTo(84, netBoxY + 84);
+            ctx.lineTo(102, netBoxY + 64);
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 34px Inter, sans-serif';
+            ctx.fillText('Valor Líquido', 142, netBoxY + 66);
+            ctx.fillStyle = '#bae6fd';
+            ctx.font = '600 21px Inter, sans-serif';
+            ctx.fillText('(mensalidade do software)', 142, netBoxY + 100);
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(426, netBoxY + 24);
+            ctx.lineTo(426, netBoxY + 124);
+            ctx.stroke();
+
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#39ff4d';
+            ctx.font = '800 32px Inter, sans-serif';
+            ctx.fillText('R$', 506, netBoxY + 92);
+            ctx.font = '900 54px Inter, sans-serif';
+            const netDigits = client.valorNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            ctx.fillText(netDigits, 744, netBoxY + 94);
+
+            // Card 4: PIX QR Code
+            const card4Y = 716, card4H = 222;
+            roundRectPath(ctx, 28, card4Y, 744, card4H, 26);
+            ctx.fillStyle = '#e8f1fa';
+            ctx.fill();
+            ctx.strokeStyle = '#bfdbfe';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const px = 128, py = card4Y + 94;
+            ctx.fillStyle = '#14b8a6';
+            function drawPixDiamond(cx, cy, size) {
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(Math.PI / 4);
+                roundRectPath(ctx, -size / 2, -size / 2, size, size, 4);
+                ctx.fill();
+                ctx.restore();
+            }
+            drawPixDiamond(px, py - 24, 22);
+            drawPixDiamond(px, py + 24, 22);
+            drawPixDiamond(px - 24, py, 22);
+            drawPixDiamond(px + 24, py, 22);
+
+            ctx.strokeStyle = '#0f2942';
+            ctx.lineWidth = 4.5;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(192, card4Y + 130);
+            ctx.lineTo(192, card4Y + 80);
+            ctx.arc(210, card4Y + 94, 17, Math.PI, 0, false);
+            ctx.arc(210, card4Y + 94, 17, 0, Math.PI * 0.85, false);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.moveTo(246, card4Y + 80);
+            ctx.lineTo(246, card4Y + 112);
+            ctx.stroke();
+            ctx.fillStyle = '#14b8a6';
+            ctx.beginPath();
+            ctx.arc(246, card4Y + 66, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(266, card4Y + 80);
+            ctx.lineTo(298, card4Y + 112);
+            ctx.moveTo(298, card4Y + 80);
+            ctx.lineTo(266, card4Y + 112);
+            ctx.stroke();
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#0f2942';
+            ctx.font = '700 24px Inter, sans-serif';
+            ctx.fillText('Pague com PIX', 212, card4Y + 168);
+
+            ctx.strokeStyle = '#94a3b8';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(395, card4Y + 26);
+            ctx.lineTo(395, card4Y + 196);
+            ctx.stroke();
+
+            const qrBoxX = 468, qrBoxY = card4Y + 13, qrBoxSize = 196;
+            roundRectPath(ctx, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 20);
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            const qrCanvas = document.createElement('canvas');
+            new QRious({
+                element: qrCanvas,
+                value: finalPixString,
+                size: 168,
+                padding: 4,
+                level: 'M',
+                foreground: '#000000',
+                background: '#ffffff'
+            });
+            ctx.drawImage(qrCanvas, qrBoxX + 14, qrBoxY + 14, 168, 168);
+
+            // Card 5: Rodapé Vencimento
+            const card5Y = 960, card5H = 104;
+            roundRectPath(ctx, 28, card5Y, 744, card5H, 26);
+            const footerNavy = ctx.createLinearGradient(28, card5Y, 772, card5Y);
+            footerNavy.addColorStop(0, '#022c54');
+            footerNavy.addColorStop(1, '#04427a');
+            ctx.fillStyle = footerNavy;
+            ctx.fill();
+
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 3.5;
+            roundRectPath(ctx, 64, card5Y + 28, 46, 46, 8);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(64, card5Y + 41);
+            ctx.lineTo(110, card5Y + 41);
+            ctx.moveTo(76, card5Y + 21);
+            ctx.lineTo(76, card5Y + 32);
+            ctx.moveTo(98, card5Y + 21);
+            ctx.lineTo(98, card5Y + 32);
+            ctx.stroke();
+
+            ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(142, card5Y + 24);
+            ctx.lineTo(142, card5Y + 80);
+            ctx.stroke();
+
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#bae6fd';
+            ctx.font = '700 19px Inter, sans-serif';
+            ctx.fillText('Vencimento:', 168, card5Y + 42);
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '800 32px Inter, sans-serif';
+            ctx.fillText(client.dueInfo.fullDateSlash, 168, card5Y + 80);
+
+            ctx.beginPath();
+            ctx.moveTo(426, card5Y + 24);
+            ctx.lineTo(426, card5Y + 80);
+            ctx.stroke();
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'italic 700 20px Inter, sans-serif';
+            ctx.fillText('Obrigado por utilizar o', 600, card5Y + 46);
+            ctx.fillStyle = '#39ff4d';
+            ctx.fillText('FlowNest (IA)!', 600, card5Y + 74);
+
+            return canvas;
+        }
+
+        /* =====================================================================
+           DOWNLOAD + ENVIO DIRETO NO WHATSAPP
+           ===================================================================== */
+        function triggerBlobDownload(blob, fileName) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            setTimeout(() => URL.revokeObjectURL(url), 4000);
+        }
+
+        async function shareOrDownloadInvoice(index, sendToWhatsApp = true) {
+            const client = globalClientsList[index];
+            if (!client) return;
+
+            const finalPixString = getFinalPixPayload(client.valorNum);
+            if (!finalPixString) {
+                alert('Você ainda não cadastrou seu Código PIX Copia e Cola! Cole o seu código PIX na configuração que será aberta agora.');
+                closeModal();
+                openConfigModal();
+                return;
+            }
+
+            showToast(`Gerando fatura PNG de ${client.cliente}...`);
+
+            try {
+                const canvas = await renderInvoiceCanvas(client, finalPixString);
+
+                const safeFileName = client.cliente
+                    .toLowerCase()
+                    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9]+/g, '_');
+                const fileName = `Fatura_FlowNest_${safeFileName}.png`;
+
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 1.0));
+                const whatsappMessage = buildWhatsAppMessage(client);
+
+                if (!sendToWhatsApp) {
+                    triggerBlobDownload(blob, fileName);
+                    showToast(`Imagem baixada: ${fileName}`);
+                    return;
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(whatsappMessage).catch(() => {});
+                }
+
+                const imageFile = new File([blob], fileName, { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [imageFile] })) {
+                    try {
+                        triggerBlobDownload(blob, fileName);
+                        await navigator.share({
+                            files: [imageFile],
+                            text: whatsappMessage
+                        });
+                        showToast('Fatura e mensagem enviadas!');
+                        return;
+                    } catch (shareErr) {
+                        if (shareErr && shareErr.name === 'AbortError') {
+                            showToast('Imagem salva no celular.');
+                            return;
+                        }
+                    }
+                }
+
+                triggerBlobDownload(blob, fileName);
+                showToast('PNG baixado! Abrindo WhatsApp com a mensagem...');
+                const encodedText = encodeURIComponent(whatsappMessage);
+
+                const cleanPhone = client.telefone.replace(/\D/g, '');
+                const phoneParam = cleanPhone.length >= 10
+                    ? `phone=${cleanPhone.startsWith('55') ? cleanPhone : '55' + cleanPhone}&`
+                    : '';
+
+                setTimeout(() => {
+                    window.open(`https://api.whatsapp.com/send?${phoneParam}text=${encodedText}`, '_blank');
+                }, 450);
+
+            } catch (err) {
+                console.error('Erro ao gerar fatura:', err);
+                showToast('Erro ao gerar imagem da fatura.');
+            }
+        }
+    </script>
+</body>
+</html>
