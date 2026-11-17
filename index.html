@@ -378,7 +378,7 @@
             </div>
         </section>
 
-        <!-- BARRA CLIENTES & LICENÇAS + BUSCA -->
+        <!-- BARRA CLIENTES & LICENÇAS + BOTÃO CADASTRAR + BUSCA -->
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-12">
 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
@@ -386,21 +386,31 @@
                     <i class="fa-solid fa-users text-sky-400 text-lg"></i>
                     <h2 class="text-lg sm:text-xl font-extrabold text-white tracking-tight">Assinantes & Licenças</h2>
                     <span id="cards-count-badge" class="tabular-nums text-[11px] font-bold bg-white/10 text-slate-300 px-2.5 py-0.5 rounded-full border border-white/10">0</span>
-                    <span class="text-[11px] text-emerald-300 bg-emerald-500/10 border border-emerald-400/25 px-2.5 py-0.5 rounded-full font-medium">
+                    <span class="hidden md:inline-flex items-center text-[11px] text-emerald-300 bg-emerald-500/10 border border-emerald-400/25 px-2.5 py-0.5 rounded-full font-medium">
                         <i class="fa-brands fa-whatsapp mr-1"></i>Clique no nome para cobrar no WhatsApp
                     </span>
                 </div>
 
-                <!-- Campo de Busca -->
-                <div class="relative w-full sm:w-64">
-                    <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input 
-                        type="text" 
-                        id="search-client-input" 
-                        oninput="renderDashboard()" 
-                        placeholder="Buscar assinante..." 
-                        class="w-full bg-white/[0.06] border border-white/15 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400/60"
+                <!-- Ações da barra: Botão Cadastrar Cliente + Campo de Busca -->
+                <div class="flex items-center gap-2.5 w-full sm:w-auto">
+                    <button 
+                        onclick="openNewClientModal()" 
+                        class="bg-fn-neon hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-full flex items-center justify-center gap-1.5 shadow-[0_0_18px_rgba(57,255,77,0.35)] transition-all flex-shrink-0 cursor-pointer"
                     >
+                        <i class="fa-solid fa-user-plus text-xs"></i>
+                        <span>Novo Cliente</span>
+                    </button>
+
+                    <div class="relative flex-1 sm:w-60">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                        <input 
+                            type="text" 
+                            id="search-client-input" 
+                            oninput="renderDashboard()" 
+                            placeholder="Buscar assinante..." 
+                            class="w-full bg-white/[0.06] border border-white/15 rounded-full pl-9 pr-4 py-2.5 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400/60"
+                        >
+                    </div>
                 </div>
             </div>
 
@@ -419,7 +429,94 @@
         </div>
     </footer>
 
-    <!-- MODAL DE DETALHES E EDIÇÃO DO ASSINANTE -->
+    <!-- MODAL DE CADASTRO DE NOVO CLIENTE -->
+    <div class="modal-overlay" id="new-client-overlay" onclick="closeNewClientModal()"></div>
+    <div class="bottom-sheet" id="new-client-sheet">
+        <div class="modal-pill"></div>
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl bg-fn-neon/15 border border-fn-neon/40 flex items-center justify-center text-fn-neon">
+                    <i class="fa-solid fa-user-plus text-sm"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-extrabold text-white leading-tight">Cadastrar Novo Cliente</h3>
+                    <p class="text-[11px] text-slate-400">Grava simultaneamente nas abas Login e pagamento</p>
+                </div>
+            </div>
+            <button onclick="closeNewClientModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="form-new-client" onsubmit="submitNewClient(event)" class="space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-fn-neon uppercase mb-1">Nome / Chave de Login *</label>
+                    <input type="text" id="new-primeiro-nome" required placeholder="Ex: Carlos" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs font-bold text-white focus:outline-none focus:border-fn-neon">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Empresa / Fantasia</label>
+                    <input type="text" id="new-empresa" placeholder="Ex: Carlos Climatização" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Nome Completo / Responsável</label>
+                    <input type="text" id="new-responsavel" placeholder="Ex: Carlos Eduardo Silva" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">WhatsApp / Telefone</label>
+                    <input type="tel" id="new-telefone" placeholder="Ex: 11999998888" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">CPF / CNPJ</label>
+                    <input type="text" id="new-doc" placeholder="Opcional" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">E-mail</label>
+                    <input type="email" id="new-email" placeholder="Opcional" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Cidade / UF</label>
+                    <input type="text" id="new-cidade" placeholder="Ex: São Paulo - SP" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                </div>
+            </div>
+
+            <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 space-y-3">
+                <span class="block text-[10px] font-extrabold uppercase tracking-wider text-sky-400">
+                    <i class="fa-solid fa-file-invoice-dollar mr-1"></i> Dados Financeiros & Licença
+                </span>
+                <div class="grid grid-cols-3 gap-2.5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Dia Venc. (1-31)</label>
+                        <input type="number" id="new-dia-vencimento" min="1" max="31" placeholder="Ex: 10" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-fn-neon tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Mensalidade (R$)</label>
+                        <input type="number" id="new-valor" step="0.01" min="0" placeholder="Ex: 49.90" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-3 py-2 text-xs font-bold text-fn-neon focus:outline-none focus:border-fn-neon tabular-nums">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-300 uppercase mb-1">Status Inicial</label>
+                        <select id="new-status" class="w-full bg-[#090f22] border border-white/20 rounded-xl px-2.5 py-2 text-xs font-extrabold text-emerald-400 focus:outline-none focus:border-fn-neon">
+                            <option value="ATIVO" class="text-emerald-400">ATIVO</option>
+                            <option value="OFF" class="text-red-400">OFF</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-submit-new-client" class="w-full py-3.5 bg-fn-neon hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg">
+                <i class="fa-solid fa-check"></i>
+                <span>Cadastrar Cliente na Planilha</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- MODAL DE DETALHES, EDIÇÃO E REMOÇÃO DO ASSINANTE -->
     <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
     <div class="bottom-sheet" id="bottom-sheet">
         <div class="modal-pill"></div>
@@ -493,7 +590,7 @@
             </div>
         </div>
 
-        <!-- Botões de Ação Rápida de Cobrança -->
+        <!-- Botões de Ação Rápida de Cobrança e Remoção -->
         <div class="grid grid-cols-1 gap-2.5">
             <button id="modal-whatsapp-share-btn" class="w-full py-3.5 bg-[#25D366] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 shadow-lg">
                 <i class="fa-brands fa-whatsapp text-base"></i>
@@ -503,10 +600,14 @@
                 <i class="fa-solid fa-download text-xs"></i>
                 <span>Apenas Baixar Fatura PNG</span>
             </button>
+            <button id="modal-btn-remover-cliente" class="w-full py-3 mt-1 bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 active:scale-[0.98] text-red-400 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-trash-can text-xs"></i>
+                <span>Remover Assinante da Planilha</span>
+            </button>
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURAÇÃO (ENGRENAGEM - APPS SCRIPT URL, PORTAL & PIX) -->
+    <!-- MODAL DE CONFIGURAÇÃO (ENGRENAGEM - APPS SCRIPT URL, PORTAL, PIX & TESTE PUSH) -->
     <div class="modal-overlay" id="config-overlay" onclick="closeConfigModal()"></div>
     <div class="bottom-sheet" id="config-sheet">
         <div class="modal-pill"></div>
@@ -531,7 +632,7 @@
                     <i class="fa-solid fa-link mr-1"></i> URL do Google Apps Script (Web App)
                 </label>
                 <input type="url" id="input-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-fn-neon">
-                <p class="text-[10px] text-slate-400 mt-1">Cole a URL da implantação do Apps Script para ler e editar status, datas e valores.</p>
+                <p class="text-[10px] text-slate-400 mt-1">Cole a URL da implantação do Apps Script para ler, cadastrar, editar e remover clientes.</p>
             </div>
 
             <div class="border-t border-white/10 pt-3">
@@ -561,6 +662,13 @@
                 </div>
             </div>
 
+            <div class="border-t border-white/10 pt-3">
+                <button type="button" onclick="testAdminOneSignalPush()" class="w-full py-2.5 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/40 text-sky-300 font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Testar Push Admin (OneSignal)</span>
+                </button>
+            </div>
+
             <div class="flex gap-2 pt-2">
                 <button onclick="saveAppConfig()" class="flex-1 py-3 bg-emerald-500 text-slate-950 font-extrabold rounded-xl text-xs uppercase tracking-wider">
                     Salvar no Navegador
@@ -579,7 +687,6 @@
         let deferredPwaPrompt = null;
 
         (function initPwaManifestAndIcons() {
-            // Gera ícone PNG de 512x512 via Canvas para compatibilidade total (Android & iOS)
             const iconCanvas = document.createElement('canvas');
             iconCanvas.width = 512;
             iconCanvas.height = 512;
@@ -617,7 +724,6 @@
             const appleIconLink = document.getElementById('pwa-apple-icon');
             if (appleIconLink) appleIconLink.href = pngIconDataUrl;
 
-            // Manifest Web App dinâmico apontando para a URL atual do GitHub Pages
             const manifestObj = {
                 name: 'FlowNest (IA) • Gestão de Assinaturas',
                 short_name: 'FlowNest Admin',
@@ -680,7 +786,7 @@
         }
 
         /* =====================================================================
-           CONFIGURAÇÕES LIMPA PARA GITHUB PAGES (SEM DADOS SENSÍVEIS)
+           CONFIGURAÇÕES LOCAIS (SEM DADOS SENSÍVEIS NO CÓDIGO-FONTE)
            ===================================================================== */
         const DEFAULT_APPSCRIPT_URL = '';
         const DEFAULT_PORTAL_URL = '';
@@ -720,7 +826,6 @@
         }
 
         window.onload = () => {
-            // Exibe botão de ajuda de instalação no iOS Safari caso ainda não esteja em modo standalone
             const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             if (isIos && !isStandalone) {
@@ -816,6 +921,30 @@
             }
         }
 
+        async function testAdminOneSignalPush() {
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) {
+                alert('Configure primeiro a URL do Google Apps Script.');
+                return;
+            }
+            showToast('Disparando notificação de teste via OneSignal...');
+            try {
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'testarNotificacaoAdmin' })
+                });
+                const result = await res.json();
+                if (result.status === 'success') {
+                    showToast('✅ Notificação de teste enviada para seu dispositivo!');
+                } else {
+                    showToast('Erro ao testar push: ' + (result.message || 'Falha'));
+                }
+            } catch (err) {
+                showToast('Erro de conexão: ' + err.message);
+            }
+        }
+
         function showConfigScreen(msg) {
             const loadingScreen = document.getElementById('loading-screen');
             loadingScreen.style.display = 'flex';
@@ -868,6 +997,154 @@
             window._toastTimer = setTimeout(() => {
                 toast.classList.remove('show');
             }, 3500);
+        }
+
+        /* =====================================================================
+           MODAL DE CADASTRO DE NOVO CLIENTE
+           ===================================================================== */
+        function openNewClientModal() {
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) {
+                openConfigModal();
+                return;
+            }
+            document.getElementById('form-new-client').reset();
+            const overlay = document.getElementById('new-client-overlay');
+            const sheet = document.getElementById('new-client-sheet');
+            overlay.style.display = 'block';
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '1';
+                sheet.style.transform = 'translate(-50%, 0)';
+            });
+        }
+
+        function closeNewClientModal() {
+            const overlay = document.getElementById('new-client-overlay');
+            const sheet = document.getElementById('new-client-sheet');
+            sheet.style.transform = 'translate(-50%, 100%)';
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        async function submitNewClient(event) {
+            event.preventDefault();
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) return;
+
+            const primeiroNome = document.getElementById('new-primeiro-nome').value.trim();
+            const empresa = document.getElementById('new-empresa').value.trim();
+            const responsavel = document.getElementById('new-responsavel').value.trim();
+            const telefone = document.getElementById('new-telefone').value.trim();
+            const doc = document.getElementById('new-doc').value.trim();
+            const email = document.getElementById('new-email').value.trim();
+            const cidade = document.getElementById('new-cidade').value.trim();
+            const diaRaw = document.getElementById('new-dia-vencimento').value.trim();
+            const valorRaw = document.getElementById('new-valor').value.trim();
+            const status = document.getElementById('new-status').value || 'ATIVO';
+
+            if (!primeiroNome) {
+                alert('Informe o Nome / Chave de Login do cliente.');
+                return;
+            }
+
+            const diaVencimento = diaRaw ? parseInt(diaRaw, 10) : '';
+            const valor = valorRaw !== '' ? parseFloat(valorRaw) : 0;
+
+            const btn = document.getElementById('btn-submit-new-client');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Cadastrando na Planilha...</span>`;
+
+            try {
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'cadastrarClienteAdmin',
+                        primeiroNome,
+                        empresa,
+                        responsavel,
+                        telefone,
+                        doc,
+                        email,
+                        cidade,
+                        diaVencimento,
+                        valor,
+                        status
+                    })
+                });
+                const result = await res.json();
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Erro ao cadastrar cliente.');
+                }
+
+                closeNewClientModal();
+                showToast(`✅ Cliente ${primeiroNome} cadastrado com sucesso!`);
+                await loadAdminData(false);
+
+            } catch (err) {
+                alert('Erro ao cadastrar: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        /* =====================================================================
+           REMOVER CLIENTE DA PLANILHA
+           ===================================================================== */
+        async function removeClientFromSheet(index) {
+            const client = globalClientsList[index];
+            if (!client) return;
+
+            const confirmar = confirm(
+                `Tem certeza que deseja REMOVER permanentemente o assinante "${client.cliente}"?\n\n` +
+                `Ele será excluído das abas "Login" e "pagamento".`
+            );
+            if (!confirmar) return;
+
+            const removerAba = confirm(
+                `Deseja apagar também a aba individual de orçamentos de "${client.cliente}" (se existir)?\n\n` +
+                `• OK = Apagar tudo (cadastro + aba de orçamentos)\n` +
+                `• Cancelar = Remover apenas o cadastro e manter o histórico de orçamentos`
+            );
+
+            const scriptUrl = getAppScriptUrl();
+            if (!scriptUrl) return;
+
+            const btn = document.getElementById('modal-btn-remover-cliente');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i><span>Removendo da Planilha...</span>`;
+
+            try {
+                const res = await fetch(scriptUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'removerClienteAdmin',
+                        cliente: client.cliente,
+                        primeiroNome: client.primeiroNome,
+                        removerAbaOrcamentos: removerAba
+                    })
+                });
+                const result = await res.json();
+
+                if (result.status !== 'success') {
+                    throw new Error(result.message || 'Erro ao remover cliente.');
+                }
+
+                closeModal();
+                showToast(`🗑️ ${client.cliente} removido da planilha!`);
+                await loadAdminData(false);
+
+            } catch (err) {
+                alert('Erro ao remover cliente: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
         }
 
         /* =====================================================================
@@ -971,6 +1248,7 @@
                         cliente: String(c.cliente || '').trim(),
                         primeiroNome: String(c.primeiroNome || c.cliente || '').trim(),
                         empresa: String(c.empresa || '').trim(),
+                        responsavel: String(c.responsavel || '').trim(),
                         telefone: String(c.telefone || '').trim(),
                         diaVencimento: diaVenc,
                         valorNum: valorNum,
@@ -1218,7 +1496,7 @@
                             <div class="space-y-1.5 text-xs text-slate-300 mb-3.5">
                                 <div class="flex items-center gap-2">
                                     <i class="fa-solid fa-laptop-code text-sky-400 text-xs w-3.5 text-center"></i>
-                                    <span class="truncate">Software: <strong class="text-slate-100 font-semibold">FlowNest (IA)</strong></span>
+                                    <span class="truncate">Software: <strong class="text-slate-100 font-semibold">${escapeHtml(item.empresa || 'FlowNest (IA)')}</strong></span>
                                 </div>
                                 <div class="flex items-center gap-2 ${item.dueInfo.textClass} font-semibold">
                                     <i class="fa-regular fa-calendar-check text-xs w-3.5 text-center"></i>
@@ -1260,7 +1538,7 @@
                             <!-- BOTÃO EDITAR / DETALHES -->
                             <button onclick="openModal(${originalIndex})" class="btn-more-details">
                                 <i class="fa-solid fa-pen-to-square text-[11px]"></i>
-                                <span>Editar Vencimento / Valor</span>
+                                <span>Editar / Remover</span>
                             </button>
                         </div>
                     </div>
@@ -1271,7 +1549,7 @@
         }
 
         /* =====================================================================
-           MODAL DE EDIÇÃO & DETALHES DO CLIENTE
+           MODAL DE EDIÇÃO, DETALHES E REMOÇÃO DO CLIENTE
            ===================================================================== */
         function updateModalHeaderState(client) {
             const badge = document.getElementById('modal-status');
@@ -1310,6 +1588,7 @@
             document.getElementById('modal-btn-salvar-edicao').onclick = () => saveClientEdits(index);
             document.getElementById('modal-whatsapp-share-btn').onclick = () => shareOrDownloadInvoice(index, true);
             document.getElementById('modal-download-only-btn').onclick = () => shareOrDownloadInvoice(index, false);
+            document.getElementById('modal-btn-remover-cliente').onclick = () => removeClientFromSheet(index);
 
             const overlay = document.getElementById('modal-overlay');
             const sheet = document.getElementById('bottom-sheet');
@@ -1459,7 +1738,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             canvas.height = H;
             const ctx = canvas.getContext('2d');
 
-            // Fundo claro moderno SaaS
             const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
             bgGrad.addColorStop(0, '#dbeafe');
             bgGrad.addColorStop(0.22, '#eff6ff');
@@ -1468,7 +1746,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.fillStyle = bgGrad;
             ctx.fillRect(0, 0, W, H);
 
-            // Detalhe geométrico tech no topo direito
             ctx.save();
             ctx.fillStyle = 'rgba(14, 165, 233, 0.12)';
             ctx.beginPath();
@@ -1476,7 +1753,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.fill();
             ctx.restore();
 
-            // Ícone Logo FlowNest(IA)
             const logoCx = 96, logoCy = 96, logoR = 56;
             roundRectPath(ctx, logoCx - logoR, logoCy - logoR, logoR * 2, logoR * 2, 28);
             const logoGrad = ctx.createLinearGradient(logoCx - logoR, logoCy - logoR, logoCx + logoR, logoCy + logoR);
@@ -1485,7 +1761,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.fillStyle = logoGrad;
             ctx.fill();
 
-            // Símbolo camadas/IA dentro do logo
             ctx.strokeStyle = '#39ff4d';
             ctx.lineWidth = 6;
             ctx.lineCap = 'round';
@@ -1508,7 +1783,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.lineTo(126, 113);
             ctx.stroke();
 
-            // Título FlowNest(IA)
             ctx.font = '900 50px Inter, sans-serif';
             ctx.textAlign = 'left';
             ctx.fillStyle = '#0f172a';
@@ -1521,7 +1795,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.fillStyle = '#334155';
             ctx.fillText('Gestão Inteligente de Orçamentos & Negócios', 177, 138);
 
-            // Card 1: Dados do Assinante e Plano
             const card1Y = 185, card1H = 104;
             roundRectPath(ctx, 28, card1Y, 744, card1H, 22);
             ctx.fillStyle = '#ffffff';
@@ -1570,7 +1843,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.font = '800 24px Inter, sans-serif';
             ctx.fillText('Plano Mensal SaaS', 500, card1Y + 74);
 
-            // Card 2: Detalhes da Assinatura
             const card2Y = 308, card2H = 220;
             roundRectPath(ctx, 28, card2Y, 744, card2H, 24);
             ctx.fillStyle = '#ffffff';
@@ -1621,7 +1893,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             ctx.font = '900 27px Inter, sans-serif';
             ctx.fillText(client.valorStr, 744, card2Y + 202);
 
-            // Card 3: Destaque Valor a Pagar
             const netBoxY = 548, netBoxH = 148;
             roundRectPath(ctx, 28, netBoxY, 744, netBoxH, 24);
             const navyGrad = ctx.createLinearGradient(28, netBoxY, 772, netBoxY + netBoxH);
@@ -1668,7 +1939,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             const netDigits = client.valorNum.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             ctx.fillText(netDigits, 744, netBoxY + 94);
 
-            // Card 4: PIX QR Code
             const card4Y = 716, card4H = 222;
             roundRectPath(ctx, 28, card4Y, 744, card4H, 26);
             ctx.fillStyle = '#e8f1fa';
@@ -1750,7 +2020,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
             });
             ctx.drawImage(qrCanvas, qrBoxX + 14, qrBoxY + 14, 168, 168);
 
-            // Card 5: Rodapé Vencimento
             const card5Y = 960, card5H = 104;
             roundRectPath(ctx, 28, card5Y, 744, card5H, 26);
             const footerNavy = ctx.createLinearGradient(28, card5Y, 772, card5Y);
@@ -1856,7 +2125,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
                 const imageFile = new File([blob], fileName, { type: 'image/png' });
                 if (navigator.canShare && navigator.canShare({ files: [imageFile] })) {
                     try {
-                        triggerBlobDownload(blob, fileName);
                         await navigator.share({
                             files: [imageFile],
                             text: whatsappMessage
@@ -1865,7 +2133,6 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
                         return;
                     } catch (shareErr) {
                         if (shareErr && shareErr.name === 'AbortError') {
-                            showToast('Imagem salva no celular.');
                             return;
                         }
                     }
