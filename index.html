@@ -3,15 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Impede indexação em mecanismos de busca (Google, Bing, etc.) -->
+    <!-- Impede indexação em mecanismos de busca -->
     <meta name="robots" content="noindex, nofollow">
-    <title>FlowNest (IA) • Gestão de Assinaturas</title>
+    <title>FlowNest assinatura</title>
 
-    <!-- Configurações PWA -->
+    <!-- Configurações PWA (Android & iOS) -->
     <meta name="theme-color" content="#050814">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FlowNest Admin">
+
+    <!-- Ícone PWA / Favicon embutido em alta resolução -->
+    <link id="pwa-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23050814'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Cpath d='M256 116 L396 190 L256 264 L116 190 Z' fill='none' stroke='%2339ff4d' stroke-width='28' stroke-linejoin='round'/%3E%3Cpath d='M116 264 L256 338 L396 264 M116 334 L256 408 L396 334' fill='none' stroke='%23ffffff' stroke-width='28' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+    <link id="pwa-apple-icon" rel="apple-touch-icon" sizes="180x180" href="">
+
+    <!-- OneSignal Web SDK v16 -->
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+            await OneSignal.init({
+                appId: "265f8607-1010-49bc-be58-7c04e3e5305f",
+                safari_web_id: "",
+                notifyButton: {
+                    enable: true,
+                    size: 'medium',
+                    position: 'bottom-left',
+                    text: {
+                        'tip.state.unsubscribed': 'Ativar notificações FlowNest',
+                        'tip.state.subscribed': 'Notificações ativadas',
+                        'tip.state.blocked': 'Notificações bloqueadas no navegador',
+                        'message.prenotify': 'Clique para receber alertas de vencimento',
+                        'message.action.subscribed': 'Obrigado por ativar as notificações!',
+                        'message.action.resubscribed': 'Notificações reativadas!',
+                        'message.action.unsubscribed': 'Você não receberá mais alertas.',
+                        'dialog.main.title': 'Notificações FlowNest(IA)',
+                        'dialog.main.button.subscribe': 'ATIVAR',
+                        'dialog.main.button.unsubscribe': 'DESATIVAR',
+                        'dialog.blocked.title': 'Desbloquear Notificações',
+                        'dialog.blocked.message': 'Siga as instruções do navegador para permitir notificações:'
+                    }
+                },
+                allowLocalhostAsSecureOrigin: true
+            });
+        });
+    </script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -248,8 +285,14 @@
                 </div>
             </div>
 
-            <!-- Controles Superiores (Status API + Filtro Status + Engrenagem) -->
+            <!-- Controles Superiores (Instalar App PWA + Status API + Filtro Status + Engrenagem) -->
             <div class="flex flex-wrap items-center justify-center gap-2.5">
+
+                <!-- BOTÃO INSTALAR APP (PWA NA TELA DE INÍCIO) -->
+                <button id="btn-install-pwa" onclick="triggerPwaInstall()" title="Adicionar aplicativo à tela de início" class="hidden bg-gradient-to-r from-emerald-500 to-sky-500 text-slate-950 rounded-2xl px-3.5 py-2 flex items-center gap-2 font-black text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all cursor-pointer">
+                    <i class="fa-solid fa-mobile-screen-button text-sm"></i>
+                    <span>Instalar App</span>
+                </button>
 
                 <!-- INDICADOR LED DO APPS SCRIPT -->
                 <button onclick="loadAdminData(true)" id="server-status-pill" title="Clique para sincronizar novamente" class="server-pill-checking rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer">
@@ -531,6 +574,112 @@
 
     <script>
         /* =====================================================================
+           INICIALIZAÇÃO PWA (MANIFEST DINÂMICO + ÍCONE PNG + INSTALL PROMPT)
+           ===================================================================== */
+        let deferredPwaPrompt = null;
+
+        (function initPwaManifestAndIcons() {
+            // Gera ícone PNG de 512x512 via Canvas para compatibilidade total (Android & iOS)
+            const iconCanvas = document.createElement('canvas');
+            iconCanvas.width = 512;
+            iconCanvas.height = 512;
+            const ictx = iconCanvas.getContext('2d');
+
+            const grad = ictx.createLinearGradient(0, 0, 512, 512);
+            grad.addColorStop(0, '#050814');
+            grad.addColorStop(1, '#0284c7');
+            ictx.fillStyle = grad;
+            ictx.fillRect(0, 0, 512, 512);
+
+            ictx.strokeStyle = '#39ff4d';
+            ictx.lineWidth = 30;
+            ictx.lineJoin = 'round';
+            ictx.lineCap = 'round';
+            ictx.beginPath();
+            ictx.moveTo(256, 118);
+            ictx.lineTo(394, 192);
+            ictx.lineTo(256, 266);
+            ictx.lineTo(118, 192);
+            ictx.closePath();
+            ictx.stroke();
+
+            ictx.strokeStyle = '#ffffff';
+            ictx.beginPath();
+            ictx.moveTo(118, 266);
+            ictx.lineTo(256, 340);
+            ictx.lineTo(394, 266);
+            ictx.moveTo(118, 336);
+            ictx.lineTo(256, 410);
+            ictx.lineTo(394, 336);
+            ictx.stroke();
+
+            const pngIconDataUrl = iconCanvas.toDataURL('image/png');
+            const appleIconLink = document.getElementById('pwa-apple-icon');
+            if (appleIconLink) appleIconLink.href = pngIconDataUrl;
+
+            // Manifest Web App dinâmico apontando para a URL atual do GitHub Pages
+            const manifestObj = {
+                name: 'FlowNest (IA) • Gestão de Assinaturas',
+                short_name: 'FlowNest Admin',
+                description: 'Painel de Gestão de Licenças e Mensalidades FlowNest(IA)',
+                start_url: window.location.href.split('#')[0],
+                scope: window.location.origin + window.location.pathname.replace(/[^/]*$/, ''),
+                display: 'standalone',
+                orientation: 'portrait',
+                background_color: '#050814',
+                theme_color: '#050814',
+                icons: [
+                    {
+                        src: pngIconDataUrl,
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    },
+                    {
+                        src: pngIconDataUrl,
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable'
+                    }
+                ]
+            };
+
+            const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: 'application/manifest+json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = manifestUrl;
+            document.head.appendChild(manifestLink);
+        })();
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPwaPrompt = e;
+            const installBtn = document.getElementById('btn-install-pwa');
+            if (installBtn) installBtn.classList.remove('hidden');
+        });
+
+        window.addEventListener('appinstalled', () => {
+            deferredPwaPrompt = null;
+            const installBtn = document.getElementById('btn-install-pwa');
+            if (installBtn) installBtn.classList.add('hidden');
+            showToast('FlowNest(IA) instalado na tela de início!');
+        });
+
+        async function triggerPwaInstall() {
+            if (deferredPwaPrompt) {
+                deferredPwaPrompt.prompt();
+                const { outcome } = await deferredPwaPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    deferredPwaPrompt = null;
+                    document.getElementById('btn-install-pwa').classList.add('hidden');
+                }
+            } else {
+                alert('Para adicionar à tela de início:\n\n• No iPhone (Safari): toque no ícone de Compartilhar (quadrado com seta para cima) e escolha "Adicionar à Tela de Início".\n• No Android (Chrome): toque nos 3 pontinhos no canto superior e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".');
+            }
+        }
+
+        /* =====================================================================
            CONFIGURAÇÕES LIMPA PARA GITHUB PAGES (SEM DADOS SENSÍVEIS)
            ===================================================================== */
         const DEFAULT_APPSCRIPT_URL = '';
@@ -571,6 +720,14 @@
         }
 
         window.onload = () => {
+            // Exibe botão de ajuda de instalação no iOS Safari caso ainda não esteja em modo standalone
+            const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+            if (isIos && !isStandalone) {
+                const installBtn = document.getElementById('btn-install-pwa');
+                if (installBtn) installBtn.classList.remove('hidden');
+            }
+
             const scriptUrl = getAppScriptUrl();
             if (!scriptUrl) {
                 showConfigScreen('Clique no botão abaixo para configurar a URL do Apps Script e seu Código PIX na memória deste navegador.');
