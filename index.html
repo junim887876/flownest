@@ -29,10 +29,12 @@
     <script>
       window.OneSignalDeferred = window.OneSignalDeferred || [];
       OneSignalDeferred.push(async function(OneSignal) {
-        await OneSignal.init({
-          appId: "2da94507-56c5-49ed-a9d5-351d5d85a984",
-          notifyButton: { enable: true }
-        });
+        try {
+          await OneSignal.init({
+            appId: "2da94507-56c5-49ed-a9d5-351d5d85a984",
+            notifyButton: { enable: true }
+          });
+        } catch (e) {}
       });
     </script>
 
@@ -188,12 +190,13 @@
             box-shadow: 0 0 14px rgba(57, 255, 77, 0.75);
         }
 
+        /* Z-INDEX CORRIGIDO: MODAIS SEMPRE ACIMA DA TELA DE AVISO/CARREGAMENTO */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(2, 5, 14, 0.78);
+            background: rgba(2, 5, 14, 0.82);
             backdrop-filter: blur(8px);
-            z-index: 50;
+            z-index: 150;
             display: none;
             opacity: 0;
             transition: opacity 0.25s ease;
@@ -212,7 +215,7 @@
             border-right: 1px solid rgba(255, 255, 255, 0.08);
             border-top-left-radius: 28px;
             border-top-right-radius: 28px;
-            z-index: 60;
+            z-index: 160;
             padding: 16px 22px 28px 22px;
             transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
             max-height: 92vh;
@@ -231,12 +234,13 @@
             position: fixed;
             inset: 0;
             background: #050814;
-            z-index: 100;
+            z-index: 90;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: opacity 0.3s ease;
+            padding: 16px;
         }
 
         .spinner {
@@ -264,7 +268,7 @@
             border-radius: 999px;
             font-size: 13px;
             font-weight: 600;
-            z-index: 200;
+            z-index: 250;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             white-space: nowrap;
@@ -283,7 +287,7 @@
     <div class="bg-grid-pattern"></div>
     <div class="bg-glow-top"></div>
 
-    <!-- Tela de Carregamento -->
+    <!-- Tela de Carregamento / Setup Inicial -->
     <div id="loading-screen">
         <div class="spinner mb-4"></div>
         <p class="text-xs text-slate-300 font-semibold tracking-wider uppercase">Sincronizando FlowNest (IA)...</p>
@@ -324,10 +328,10 @@
 
                     <!-- Botões Instalar App & Engrenagem no Mobile -->
                     <div class="flex sm:hidden items-center gap-2">
-                        <button id="btn-install-pwa-mobile" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden w-10 h-10 rounded-full bg-fn-neon/15 border border-fn-neon/40 flex items-center justify-center text-fn-neon">
+                        <button type="button" id="btn-install-pwa-mobile" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden w-10 h-10 rounded-full bg-fn-neon/15 border border-fn-neon/40 flex items-center justify-center text-fn-neon">
                             <i class="fa-solid fa-mobile-screen-button text-sm"></i>
                         </button>
-                        <button onclick="openConfigModal()" title="Configurações" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-slate-200">
+                        <button type="button" onclick="openConfigModal()" title="Configurações" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-slate-200 cursor-pointer">
                             <i class="fa-solid fa-gear text-sm"></i>
                         </button>
                     </div>
@@ -358,18 +362,18 @@
                     </div>
 
                     <!-- Botão Instalar PWA -->
-                    <button id="btn-install-pwa" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden px-3.5 h-10 rounded-full bg-fn-neon/15 hover:bg-fn-neon/25 border border-fn-neon/45 flex items-center justify-center gap-2 text-fn-neon text-xs font-extrabold tracking-wide transition-all cursor-pointer">
+                    <button type="button" id="btn-install-pwa" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden px-3.5 h-10 rounded-full bg-fn-neon/15 hover:bg-fn-neon/25 border border-fn-neon/45 flex items-center justify-center gap-2 text-fn-neon text-xs font-extrabold tracking-wide transition-all cursor-pointer">
                         <i class="fa-solid fa-download text-xs"></i>
                         <span>Instalar App</span>
                     </button>
 
                     <!-- Botão Sincronizar Planilha -->
-                    <button onclick="loadAdminData(true)" title="Atualizar Planilha" class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 flex items-center justify-center text-slate-200 transition-colors cursor-pointer">
+                    <button type="button" onclick="loadAdminData(true)" title="Atualizar Planilha" class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 flex items-center justify-center text-slate-200 transition-colors cursor-pointer">
                         <i class="fa-solid fa-rotate text-sm"></i>
                     </button>
 
                     <!-- Botão Engrenagem Desktop -->
-                    <button onclick="openConfigModal()" title="Configurações" class="hidden sm:flex w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 items-center justify-center text-slate-200 transition-colors cursor-pointer">
+                    <button type="button" onclick="openConfigModal()" title="Configurações" class="hidden sm:flex w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 items-center justify-center text-slate-200 transition-colors cursor-pointer">
                         <i class="fa-solid fa-gear text-sm"></i>
                     </button>
                 </div>
@@ -393,11 +397,11 @@
                 </div>
 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button id="btn-kb-ativo" onclick="setKbEsteticaStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                    <button type="button" id="btn-kb-ativo" onclick="setKbEsteticaStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>Ativar (ATIVO)</span>
                     </button>
-                    <button id="btn-kb-bloqueado" onclick="setKbEsteticaStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
+                    <button type="button" id="btn-kb-bloqueado" onclick="setKbEsteticaStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
                         <span>Bloquear</span>
                     </button>
@@ -422,11 +426,11 @@
                 </div>
 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button id="btn-barber-ativo" onclick="setBarberStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                    <button type="button" id="btn-barber-ativo" onclick="setBarberStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>Ativar (ATIVO)</span>
                     </button>
-                    <button id="btn-barber-bloqueado" onclick="setBarberStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
+                    <button type="button" id="btn-barber-bloqueado" onclick="setBarberStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
                         <span>Bloquear</span>
                     </button>
@@ -451,11 +455,11 @@
                 </div>
 
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button id="btn-tnsolar-ativo" onclick="setTnsolarStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                    <button type="button" id="btn-tnsolar-ativo" onclick="setTnsolarStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
                         <i class="fa-solid fa-circle-check"></i>
                         <span>Ativar (ATIVO)</span>
                     </button>
-                    <button id="btn-tnsolar-bloqueado" onclick="setTnsolarStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
+                    <button type="button" id="btn-tnsolar-bloqueado" onclick="setTnsolarStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
                         <span>Bloquear</span>
                     </button>
@@ -529,6 +533,7 @@
 
                 <div class="flex items-center gap-2.5 w-full sm:w-auto">
                     <button 
+                        type="button"
                         onclick="openNewClientModal()" 
                         class="bg-fn-neon hover:bg-emerald-400 active:scale-95 text-slate-950 font-black text-xs uppercase tracking-wider px-4 py-2.5 rounded-full flex items-center justify-center gap-1.5 shadow-[0_0_18px_rgba(57,255,77,0.35)] transition-all flex-shrink-0 cursor-pointer"
                     >
@@ -578,7 +583,7 @@
                     <p class="text-[11px] text-slate-400">Grava simultaneamente nas abas Login e pagamento</p>
                 </div>
             </div>
-            <button onclick="closeNewClientModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+            <button type="button" onclick="closeNewClientModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300 cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -644,7 +649,7 @@
                 </div>
             </div>
 
-            <button type="submit" id="btn-submit-new-client" class="w-full py-3.5 bg-fn-neon hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg">
+            <button type="submit" id="btn-submit-new-client" class="w-full py-3.5 bg-fn-neon hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer">
                 <i class="fa-solid fa-check"></i>
                 <span>Cadastrar Cliente na Planilha</span>
             </button>
@@ -667,7 +672,7 @@
             </div>
             <div class="flex items-center gap-2 flex-shrink-0">
                 <span id="modal-status" class="text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">ATIVO</span>
-                <button onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+                <button type="button" onclick="closeModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300 cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -678,11 +683,11 @@
                 Controle de Licença (Aba Login -> Status)
             </span>
             <div class="grid grid-cols-2 gap-2.5">
-                <button id="modal-btn-ativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500 hover:text-slate-950">
+                <button type="button" id="modal-btn-ativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 hover:bg-emerald-500 hover:text-slate-950 cursor-pointer">
                     <i class="fa-solid fa-circle-check"></i>
                     <span>Ativar (ATIVO)</span>
                 </button>
-                <button id="modal-btn-desativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-red-500/20 text-red-300 border border-red-500/50 hover:bg-red-500 hover:text-white">
+                <button type="button" id="modal-btn-desativar" class="py-3 px-3 rounded-xl font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 bg-red-500/20 text-red-300 border border-red-500/50 hover:bg-red-500 hover:text-white cursor-pointer">
                     <i class="fa-solid fa-ban"></i>
                     <span>Bloquear (OFF)</span>
                 </button>
@@ -705,7 +710,7 @@
                 </div>
             </div>
 
-            <button id="modal-btn-salvar-edicao" class="w-full py-3 bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg">
+            <button type="button" id="modal-btn-salvar-edicao" class="w-full py-3 bg-sky-500 hover:bg-sky-400 active:scale-[0.98] text-slate-950 font-black rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer">
                 <i class="fa-solid fa-floppy-disk"></i>
                 <span>Salvar Alterações na Planilha</span>
             </button>
@@ -723,15 +728,15 @@
         </div>
 
         <div class="grid grid-cols-1 gap-2.5">
-            <button id="modal-whatsapp-share-btn" class="w-full py-3.5 bg-[#25D366] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 shadow-lg">
+            <button type="button" id="modal-whatsapp-share-btn" class="w-full py-3.5 bg-[#25D366] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 shadow-lg cursor-pointer">
                 <i class="fa-brands fa-whatsapp text-base"></i>
                 <span>Enviar Cobrança PNG + Mensagem</span>
             </button>
-            <button id="modal-download-only-btn" class="w-full py-3 bg-white/10 active:scale-[0.98] text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2">
+            <button type="button" id="modal-download-only-btn" class="w-full py-3 bg-white/10 active:scale-[0.98] text-white font-bold rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-download text-xs"></i>
                 <span>Apenas Baixar Fatura PNG</span>
             </button>
-            <button id="modal-btn-remover-cliente" class="w-full py-3 mt-1 bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 active:scale-[0.98] text-red-400 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2">
+            <button type="button" id="modal-btn-remover-cliente" class="w-full py-3 mt-1 bg-red-500/15 hover:bg-red-500/25 border border-red-500/40 active:scale-[0.98] text-red-400 font-extrabold rounded-2xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer">
                 <i class="fa-solid fa-trash-can text-xs"></i>
                 <span>Remover Assinante da Planilha</span>
             </button>
@@ -747,7 +752,7 @@
                 <i class="fa-solid fa-gear text-fn-neon"></i>
                 <h3 class="text-xl font-extrabold text-white">Configurações Locais</h3>
             </div>
-            <button onclick="closeConfigModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300">
+            <button type="button" onclick="closeConfigModal()" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-slate-300 cursor-pointer">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -821,17 +826,17 @@
             </div>
 
             <div class="border-t border-white/10 pt-3">
-                <button type="button" onclick="testAdminOneSignalPush()" class="w-full py-2.5 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/40 text-sky-300 font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all">
+                <button type="button" onclick="testAdminOneSignalPush()" class="w-full py-2.5 bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/40 text-sky-300 font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer">
                     <i class="fa-solid fa-bell"></i>
                     <span>Testar Push Admin (OneSignal)</span>
                 </button>
             </div>
 
             <div class="flex gap-2 pt-2">
-                <button onclick="saveAppConfig()" class="flex-1 py-3 bg-emerald-500 text-slate-950 font-extrabold rounded-xl text-xs uppercase tracking-wider">
+                <button type="button" onclick="saveAppConfig()" class="flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 font-extrabold rounded-xl text-xs uppercase tracking-wider cursor-pointer">
                     Salvar no Navegador
                 </button>
-                <button onclick="clearAppConfig()" class="py-3 px-4 bg-red-500/15 text-red-400 border border-red-500/30 font-bold rounded-xl text-xs uppercase">
+                <button type="button" onclick="clearAppConfig()" class="py-3 px-4 bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 font-bold rounded-xl text-xs uppercase cursor-pointer">
                     Apagar Tudo
                 </button>
             </div>
@@ -984,6 +989,15 @@
                 .replace(/'/g, '&#039;');
         }
 
+        function hideLoadingScreen() {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (!loadingScreen) return;
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+                loadingScreen.style.display = 'none';
+            }, 250);
+        }
+
         window.onload = () => {
             const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
@@ -999,10 +1013,9 @@
             const scriptUrl = getAppScriptUrl();
             if (!scriptUrl) {
                 if (getKbAppScriptUrl() || getBarberAppScriptUrl() || getTnsolarAppScriptUrl()) {
-                    const loadingScreen = document.getElementById('loading-screen');
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
+                    hideLoadingScreen();
                     setApiLedStatus('online', 'CONECTADO', 'Modo Controle Remoto');
+                    renderDashboard();
                 } else {
                     showConfigScreen('Clique no botão abaixo para colar manualmente as URLs do Apps Script (Geral, Estética KB, Barbearia e Index Proprietário TNSolar) na memória deste navegador.');
                     setApiLedStatus('offline', 'SEM CONFIGURAÇÃO', 'Configure na engrenagem');
@@ -1037,6 +1050,9 @@
         }
 
         function openConfigModal() {
+            // Garante que qualquer tela de carregamento/setup não cubra o modal
+            hideLoadingScreen();
+
             document.getElementById('input-appscript-url').value = getAppScriptUrl();
             document.getElementById('input-kb-appscript-url').value = getKbAppScriptUrl();
             document.getElementById('input-barber-appscript-url').value = getBarberAppScriptUrl();
@@ -1124,7 +1140,19 @@
             localStorage.setItem(STORAGE_PIX_MODE, pixModeVal);
 
             closeConfigModal();
-            location.reload();
+            showToast('✅ Configurações salvas no navegador!');
+
+            syncKbEsteticaStatus();
+            syncBarberStatus();
+            syncTnsolarStatus();
+
+            if (urlVal) {
+                loadAdminData(true);
+            } else {
+                hideLoadingScreen();
+                setApiLedStatus('online', 'CONECTADO', 'Modo Controle Remoto');
+                renderDashboard();
+            }
         }
 
         function clearAppConfig() {
@@ -1444,7 +1472,7 @@
                     </div>
                     <h3 class="text-white font-extrabold text-lg mb-2">Configurar Painel Local</h3>
                     <p class="text-xs text-slate-300 mb-5 leading-relaxed font-normal">${escapeHtml(msg)}</p>
-                    <button onclick="openConfigModal()" class="w-full py-3 bg-emerald-500 text-slate-950 rounded-xl text-xs font-extrabold uppercase tracking-wider">Configurar Agora</button>
+                    <button type="button" onclick="openConfigModal()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-slate-950 rounded-xl text-xs font-extrabold uppercase tracking-wider cursor-pointer">Configurar Agora</button>
                 </div>
             `;
         }
@@ -1717,7 +1745,16 @@
             syncBarberStatus();
             syncTnsolarStatus();
 
-            if (!scriptUrl) return;
+            if (!scriptUrl) {
+                if (getKbAppScriptUrl() || getBarberAppScriptUrl() || getTnsolarAppScriptUrl()) {
+                    hideLoadingScreen();
+                    setApiLedStatus('online', 'CONECTADO', 'Modo Controle Remoto');
+                    if (manual) showToast('Status dos controles remotos atualizado!');
+                } else {
+                    openConfigModal();
+                }
+                return;
+            }
 
             setApiLedStatus('checking', 'SINCRONIZANDO...', 'Lendo planilha...');
             if (manual) showToast('Atualizando dados da planilha...');
@@ -1756,9 +1793,7 @@
                 const horaAtual = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
                 setApiLedStatus('online', 'API CONECTADA', `Atualizado às ${horaAtual}`);
 
-                const loadingScreen = document.getElementById('loading-screen');
-                loadingScreen.style.opacity = '0';
-                setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
+                hideLoadingScreen();
 
                 if (manual) showToast('Planilha sincronizada com sucesso!');
 
@@ -1991,8 +2026,9 @@
                             </div>
 
                             <button 
+                                type="button"
                                 onclick="shareOrDownloadInvoice(${originalIndex}, true)" 
-                                class="w-full text-left group flex items-center justify-between gap-2 mb-2 focus:outline-none active:scale-[0.98] transition-transform"
+                                class="w-full text-left group flex items-center justify-between gap-2 mb-2 focus:outline-none active:scale-[0.98] transition-transform cursor-pointer"
                             >
                                 <h3 class="text-lg font-extrabold text-white group-hover:text-emerald-400 capitalize tracking-tight truncate">
                                     ${safeClientName}
@@ -2027,22 +2063,24 @@
 
                             <div class="grid grid-cols-2 gap-2 mb-2.5">
                                 <button 
+                                    type="button"
                                     onclick="toggleClientStatus(${originalIndex}, 'ATIVO')" 
-                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 ${item.isAtivo ? 'bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)]' : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/35 hover:bg-emerald-500/25'}"
+                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${item.isAtivo ? 'bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)]' : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/35 hover:bg-emerald-500/25'}"
                                 >
                                     <i class="fa-solid fa-check"></i>
                                     <span>Ativar</span>
                                 </button>
                                 <button 
+                                    type="button"
                                     onclick="toggleClientStatus(${originalIndex}, 'OFF')" 
-                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 ${!item.isAtivo ? 'bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)]' : 'bg-red-500/15 text-red-300 border border-red-500/35 hover:bg-red-500/25'}"
+                                    class="py-2 px-2 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer ${!item.isAtivo ? 'bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)]' : 'bg-red-500/15 text-red-300 border border-red-500/35 hover:bg-red-500/25'}"
                                 >
                                     <i class="fa-solid fa-xmark"></i>
                                     <span>Off</span>
                                 </button>
                             </div>
 
-                            <button onclick="openModal(${originalIndex})" class="btn-more-details">
+                            <button type="button" onclick="openModal(${originalIndex})" class="btn-more-details">
                                 <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                 <span>Editar / Remover</span>
                             </button>
