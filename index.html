@@ -328,14 +328,14 @@
                     </div>
                 </div>
 
-                <!-- Botão Engrenagem (Configurar Apps Script URL, Estética KB, Portal e PIX) -->
-                <button onclick="openConfigModal()" title="Configurar URL do Apps Script, Estética KB, Portal e PIX" class="top-glass-pill w-11 h-11 rounded-full flex items-center justify-center text-white hover:border-fn-neon/50 active:scale-90 transition-all">
+                <!-- Botão Engrenagem (Configurar Apps Script URLs, Portal e PIX) -->
+                <button onclick="openConfigModal()" title="Configurar URLs do Apps Script, Portal e PIX" class="top-glass-pill w-11 h-11 rounded-full flex items-center justify-center text-white hover:border-fn-neon/50 active:scale-90 transition-all">
                     <i class="fa-solid fa-gear text-sm"></i>
                 </button>
             </div>
         </header>
 
-        <!-- BARRA DE CONTROLE REMOTO — ESTÉTICA KB / BARBEARIA (EXIBIDA QUANDO A URL ESTÁ SALVA) -->
+        <!-- BARRA 1: CONTROLE REMOTO — ESTÉTICA KB -->
         <section id="kb-control-bar" class="hidden w-full max-w-3xl mx-auto px-4 sm:px-6 mt-1 mb-2">
             <div class="top-glass-pill rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 border border-sky-400/35">
                 <div class="flex items-center gap-3">
@@ -349,7 +349,7 @@
                                 VERIFICANDO...
                             </span>
                         </div>
-                        <span id="kb-status-subtext" class="block text-[10px] text-slate-400 mt-0.5">Sincronizado via Apps Script</span>
+                        <span id="kb-status-subtext" class="block text-[10px] text-slate-400 mt-0.5">Sincronizado via Apps Script Estética KB</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -358,6 +358,36 @@
                         <span>Ativo</span>
                     </button>
                     <button type="button" onclick="setKbEsteticaStatus('BLOQUEADO')" id="btn-kb-bloqueado" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500 hover:text-white cursor-pointer">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Bloqueado</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BARRA 2: CONTROLE REMOTO — BARBEARIA (SECRET BARBER) -->
+        <section id="barber-control-bar" class="hidden w-full max-w-3xl mx-auto px-4 sm:px-6 mt-1 mb-2">
+            <div class="top-glass-pill rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 border border-amber-400/35">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/35 flex items-center justify-center text-amber-400 flex-shrink-0">
+                        <i class="fa-solid fa-scissors text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-extrabold text-white">Secret Barber (Barbearia)</span>
+                            <span id="barber-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/35">
+                                VERIFICANDO...
+                            </span>
+                        </div>
+                        <span id="barber-status-subtext" class="block text-[10px] text-slate-400 mt-0.5">Sincronizado via Apps Script Barbearia</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button type="button" onclick="setBarberStatus('ATIVO')" id="btn-barber-ativo" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 cursor-pointer">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Ativo</span>
+                    </button>
+                    <button type="button" onclick="setBarberStatus('BLOQUEADO')" id="btn-barber-bloqueado" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500 hover:text-white cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
                         <span>Bloqueado</span>
                     </button>
@@ -637,7 +667,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE CONFIGURAÇÃO (ENGRENAGEM - APPS SCRIPT URL, ESTÉTICA KB, PORTAL, PIX & TESTE PUSH) -->
+    <!-- MODAL DE CONFIGURAÇÃO (ENGRENAGEM - APPS SCRIPT URLs, PORTAL, PIX & TESTE PUSH) -->
     <div class="modal-overlay" id="config-overlay" onclick="closeConfigModal()"></div>
     <div class="bottom-sheet" id="config-sheet">
         <div class="modal-pill"></div>
@@ -659,19 +689,28 @@
         <div class="space-y-4">
             <div>
                 <label class="block text-[11px] font-bold text-fn-neon uppercase mb-1.5">
-                    <i class="fa-solid fa-link mr-1"></i> URL do Google Apps Script (Web App)
+                    <i class="fa-solid fa-link mr-1"></i> URL do Google Apps Script (Web App Geral)
                 </label>
                 <input type="url" id="input-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-fn-neon">
                 <p class="text-[10px] text-slate-400 mt-1">Cole a URL da implantação do Apps Script para ler, cadastrar, editar e remover clientes.</p>
             </div>
 
-            <!-- URL PARA CONTROLE DIRETO (ATIVO / BLOQUEADO) -->
+            <!-- CAMPO 1: URL EXCLUSIVA PARA A ESTÉTICA KB -->
             <div class="border-t border-white/10 pt-3">
                 <label class="block text-[11px] font-bold text-sky-400 uppercase mb-1.5">
-                    <i class="fa-solid fa-car-side mr-1"></i> URL Google Apps Script — Estética KB / Barbearia (ATIVO / BLOQUEADO)
+                    <i class="fa-solid fa-car-side mr-1"></i> URL Google Apps Script — Estética KB (ATIVO / BLOQUEADO)
                 </label>
                 <input type="url" id="input-kb-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-sky-400/35 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-sky-400">
-                <p class="text-[10px] text-slate-400 mt-1">Cole aqui a URL do Apps Script para controlar por este painel se o app está <strong>ATIVO</strong> ou <strong>BLOQUEADO</strong> e disparar push via OneSignal.</p>
+                <p class="text-[10px] text-slate-400 mt-1">Cole aqui a URL do Apps Script da <strong>Estética KB</strong>.</p>
+            </div>
+
+            <!-- CAMPO 2: URL EXCLUSIVA PARA A BARBEARIA (SECRET BARBER) -->
+            <div class="border-t border-white/10 pt-3">
+                <label class="block text-[11px] font-bold text-amber-400 uppercase mb-1.5">
+                    <i class="fa-solid fa-scissors mr-1"></i> URL Google Apps Script — Barbearia (ATIVO / BLOQUEADO)
+                </label>
+                <input type="url" id="input-barber-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-amber-400/35 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-amber-400">
+                <p class="text-[10px] text-slate-400 mt-1">Cole aqui a URL do Apps Script da <strong>Barbearia (Secret Barber)</strong> para ativar/bloquear e notificar via OneSignal.</p>
             </div>
 
             <div class="border-t border-white/10 pt-3">
@@ -829,11 +868,13 @@
            ===================================================================== */
         const DEFAULT_APPSCRIPT_URL = '';
         const DEFAULT_KB_APPSCRIPT_URL = '';
+        const DEFAULT_BARBER_APPSCRIPT_URL = '';
         const DEFAULT_PORTAL_URL = '';
         const DEFAULT_PIX_CODE = '';
 
         const STORAGE_APPSCRIPT_URL = 'flownest_appscript_url_v1';
         const STORAGE_KB_APPSCRIPT_URL = 'flownest_kb_appscript_url_v1';
+        const STORAGE_BARBER_APPSCRIPT_URL = 'flownest_barber_appscript_url_v1';
         const STORAGE_PORTAL_URL = 'flownest_portal_url_v1';
         const STORAGE_PIX_CODE = 'flownest_pix_code_v1';
         const STORAGE_PIX_MODE = 'flownest_pix_mode_v1';
@@ -875,16 +916,17 @@
             }
 
             syncKbEsteticaStatus();
+            syncBarberStatus();
 
             const scriptUrl = getAppScriptUrl();
             if (!scriptUrl) {
-                if (getKbAppScriptUrl()) {
+                if (getKbAppScriptUrl() || getBarberAppScriptUrl()) {
                     const loadingScreen = document.getElementById('loading-screen');
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
                     setApiLedStatus('online', 'CONECTADO', 'Modo Controle Remoto');
                 } else {
-                    showConfigScreen('Clique no botão abaixo para configurar a URL do Apps Script e seu Código PIX na memória deste navegador.');
+                    showConfigScreen('Clique no botão abaixo para configurar as URLs do Apps Script e seu Código PIX na memória deste navegador.');
                     setApiLedStatus('offline', 'SEM CONFIGURAÇÃO', 'Configure na engrenagem');
                 }
             } else {
@@ -903,6 +945,10 @@
             return (localStorage.getItem(STORAGE_KB_APPSCRIPT_URL) || DEFAULT_KB_APPSCRIPT_URL).trim();
         }
 
+        function getBarberAppScriptUrl() {
+            return (localStorage.getItem(STORAGE_BARBER_APPSCRIPT_URL) || DEFAULT_BARBER_APPSCRIPT_URL).trim();
+        }
+
         function getPortalUrl() {
             return (localStorage.getItem(STORAGE_PORTAL_URL) || DEFAULT_PORTAL_URL).trim();
         }
@@ -914,6 +960,7 @@
         function openConfigModal() {
             document.getElementById('input-appscript-url').value = getAppScriptUrl();
             document.getElementById('input-kb-appscript-url').value = getKbAppScriptUrl();
+            document.getElementById('input-barber-appscript-url').value = getBarberAppScriptUrl();
             document.getElementById('input-portal-url').value = getPortalUrl();
             document.getElementById('input-pix-code').value = getStoredPixCode();
             document.getElementById('input-pix-mode').value = localStorage.getItem(STORAGE_PIX_MODE) || 'official_with_amount';
@@ -938,14 +985,25 @@
         function saveAppConfig() {
             const urlVal = document.getElementById('input-appscript-url').value.trim();
             const kbUrlVal = document.getElementById('input-kb-appscript-url').value.trim();
+            const barberUrlVal = document.getElementById('input-barber-appscript-url').value.trim();
 
-            if ((!urlVal || !urlVal.startsWith('http')) && (!kbUrlVal || !kbUrlVal.startsWith('http'))) {
-                alert('Por favor, insira uma URL válida do Google Apps Script (começando com https://script.google.com/...).');
+            const hasAnyValidUrl =
+                (urlVal && urlVal.startsWith('http')) ||
+                (kbUrlVal && kbUrlVal.startsWith('http')) ||
+                (barberUrlVal && barberUrlVal.startsWith('http'));
+
+            if (!hasAnyValidUrl) {
+                alert('Por favor, insira pelo menos uma URL válida do Google Apps Script (começando com https://script.google.com/...).');
                 return;
             }
 
             if (kbUrlVal && !kbUrlVal.startsWith('http')) {
-                alert('A URL do Google Apps Script precisa começar com https://script.google.com/...');
+                alert('A URL do Google Apps Script da Estética KB precisa começar com https://script.google.com/...');
+                return;
+            }
+
+            if (barberUrlVal && !barberUrlVal.startsWith('http')) {
+                alert('A URL do Google Apps Script da Barbearia precisa começar com https://script.google.com/...');
                 return;
             }
 
@@ -963,6 +1021,12 @@
                 localStorage.setItem(STORAGE_KB_APPSCRIPT_URL, kbUrlVal);
             } else {
                 localStorage.removeItem(STORAGE_KB_APPSCRIPT_URL);
+            }
+
+            if (barberUrlVal) {
+                localStorage.setItem(STORAGE_BARBER_APPSCRIPT_URL, barberUrlVal);
+            } else {
+                localStorage.removeItem(STORAGE_BARBER_APPSCRIPT_URL);
             }
 
             if (portalVal) {
@@ -984,9 +1048,10 @@
         }
 
         function clearAppConfig() {
-            if (confirm('Deseja apagar as URLs do Apps Script, o link do portal e o código PIX salvos neste navegador?')) {
+            if (confirm('Deseja apagar as URLs do Apps Script (Geral, Estética KB e Barbearia), o link do portal e o código PIX salvos neste navegador?')) {
                 localStorage.removeItem(STORAGE_APPSCRIPT_URL);
                 localStorage.removeItem(STORAGE_KB_APPSCRIPT_URL);
+                localStorage.removeItem(STORAGE_BARBER_APPSCRIPT_URL);
                 localStorage.removeItem(STORAGE_PORTAL_URL);
                 localStorage.removeItem(STORAGE_PIX_CODE);
                 localStorage.removeItem(STORAGE_PIX_MODE);
@@ -995,7 +1060,7 @@
         }
 
         /* =====================================================================
-           CONTROLE DIRETO (ATIVO / BLOQUEADO VIA APPS SCRIPT + ONESIGNAL)
+           CONTROLE REMOTO 1 — ESTÉTICA KB (ATIVO / BLOQUEADO)
            ===================================================================== */
         function updateKbStatusUi(statusStr, vencimentoStr = '') {
             const badge = document.getElementById('kb-status-badge');
@@ -1008,13 +1073,13 @@
             if (isAtivo) {
                 badge.innerText = 'ATIVO';
                 badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-                subtext.innerText = vencimentoStr ? `Em dias • Vencimento na planilha: ${vencimentoStr}` : 'App liberado (ATIVO) • OneSignal sincronizado';
+                subtext.innerText = vencimentoStr ? `Em dias • Vencimento na planilha: ${vencimentoStr}` : 'App da Estética KB liberado (ATIVO)';
                 btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)] cursor-pointer';
                 btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer';
             } else {
                 badge.innerText = 'BLOQUEADO';
                 badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/40';
-                subtext.innerText = vencimentoStr ? `Suspenso • Vencimento na planilha: ${vencimentoStr}` : 'App suspenso (BLOQUEADO) • OneSignal notificado';
+                subtext.innerText = vencimentoStr ? `Suspenso • Vencimento na planilha: ${vencimentoStr}` : 'App da Estética KB suspenso (BLOQUEADO)';
                 btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer';
                 btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)] cursor-pointer';
             }
@@ -1042,7 +1107,7 @@
                 }
             } catch (e) {
                 const subtext = document.getElementById('kb-status-subtext');
-                if (subtext) subtext.innerText = 'Erro ao ler status (verifique a URL)';
+                if (subtext) subtext.innerText = 'Erro ao ler status da Estética KB (verifique a URL)';
             }
         }
 
@@ -1052,8 +1117,8 @@
 
             const alvoAtivo = String(novoStatus).toUpperCase() === 'ATIVO';
             showToast(alvoAtivo
-                ? 'Ativando licença e enviando push OneSignal...'
-                : 'Bloqueando acesso e enviando push OneSignal...'
+                ? 'Ativando licença da Estética KB...'
+                : 'Bloqueando acesso da Estética KB...'
             );
 
             let vencParaEnviar = vencimentoIsoOpcional;
@@ -1081,14 +1146,101 @@
                 if (result && result.ok && result.sistema) {
                     updateKbStatusUi(result.sistema.status, result.sistema.vencimento || '');
                     showToast(alvoAtivo
-                        ? '✅ ATIVO na planilha e push enviado via OneSignal!'
-                        : '🔴 BLOQUEADO na planilha e push enviado via OneSignal!'
+                        ? '✅ Estética KB definida como ATIVO na planilha!'
+                        : '🔴 Estética KB definida como BLOQUEADO na planilha!'
                     );
                 } else {
-                    throw new Error((result && (result.error || result.message)) || 'Resposta inválida do Apps Script');
+                    throw new Error((result && (result.error || result.message)) || 'Resposta inválida do Apps Script KB');
                 }
             } catch (err) {
-                showToast('Erro ao alterar status: ' + err.message);
+                showToast('Erro ao alterar status da Estética KB: ' + err.message);
+            }
+        }
+
+        /* =====================================================================
+           CONTROLE REMOTO 2 — BARBEARIA / SECRET BARBER (ATIVO / BLOQUEADO)
+           ===================================================================== */
+        function updateBarberStatusUi(statusStr) {
+            const badge = document.getElementById('barber-status-badge');
+            const subtext = document.getElementById('barber-status-subtext');
+            const btnAtivo = document.getElementById('btn-barber-ativo');
+            const btnBloqueado = document.getElementById('btn-barber-bloqueado');
+
+            const isAtivo = String(statusStr || '').toUpperCase() === 'ATIVO';
+
+            if (isAtivo) {
+                badge.innerText = 'ATIVO';
+                badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                subtext.innerText = 'Sistema da Barbearia liberado (ATIVO) • OneSignal ativo';
+                btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)] cursor-pointer';
+                btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer';
+            } else {
+                badge.innerText = 'BLOQUEADO';
+                badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/40';
+                subtext.innerText = 'Sistema da Barbearia travado (BLOQUEADO) • Push enviado';
+                btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer';
+                btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)] cursor-pointer';
+            }
+        }
+
+        async function syncBarberStatus() {
+            const barberUrl = getBarberAppScriptUrl();
+            const bar = document.getElementById('barber-control-bar');
+            if (!barberUrl) {
+                if (bar) bar.classList.add('hidden');
+                return;
+            }
+            if (bar) bar.classList.remove('hidden');
+
+            try {
+                const sep = barberUrl.includes('?') ? '&' : '?';
+                const res = await fetch(`${barberUrl}${sep}t=${Date.now()}`);
+                const data = await res.json();
+                if (data && data.sistema) {
+                    updateBarberStatusUi(data.sistema.status || (data.sistema.ativo ? 'ATIVO' : 'BLOQUEADO'));
+                } else if (data && data.status === 'locked') {
+                    updateBarberStatusUi('BLOQUEADO');
+                } else if (data && data.status === 'ok') {
+                    updateBarberStatusUi('ATIVO');
+                }
+            } catch (e) {
+                const subtext = document.getElementById('barber-status-subtext');
+                if (subtext) subtext.innerText = 'Erro ao ler status da Barbearia (verifique a URL)';
+            }
+        }
+
+        async function setBarberStatus(novoStatus) {
+            const barberUrl = getBarberAppScriptUrl();
+            if (!barberUrl) return;
+
+            const alvoAtivo = String(novoStatus).toUpperCase() === 'ATIVO';
+            showToast(alvoAtivo
+                ? 'Ativando Barbearia e enviando push OneSignal...'
+                : 'Bloqueando Barbearia e enviando push OneSignal...'
+            );
+
+            try {
+                const res = await fetch(barberUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'update_license',
+                        status: alvoAtivo ? 'ATIVO' : 'BLOQUEADO_MANUAL'
+                    })
+                });
+                const result = await res.json();
+                if (result && (result.ok || result.status === 'ok')) {
+                    const finalStatus = (result.sistema && result.sistema.status) || (alvoAtivo ? 'ATIVO' : 'BLOQUEADO');
+                    updateBarberStatusUi(finalStatus);
+                    showToast(alvoAtivo
+                        ? '✅ Barbearia ATIVA na planilha e push enviado via OneSignal!'
+                        : '🔴 Barbearia BLOQUEADA na planilha e push enviado via OneSignal!'
+                    );
+                } else {
+                    throw new Error((result && (result.error || result.message)) || 'Resposta inválida do Apps Script da Barbearia');
+                }
+            } catch (err) {
+                showToast('Erro ao alterar status da Barbearia: ' + err.message);
             }
         }
 
@@ -1397,6 +1549,7 @@
         async function loadAdminData(manual = false) {
             const scriptUrl = getAppScriptUrl();
             syncKbEsteticaStatus();
+            syncBarberStatus();
 
             if (!scriptUrl) return;
 
@@ -1478,10 +1631,17 @@
                 updateModalHeaderState(client);
             }
 
-            // Se o cliente for a Estética KB / Barbearia e a URL dedicada estiver configurada, espelha o status também na planilha dela
-            const isKbClient = client.cliente.toLowerCase().includes('kb') || client.empresa.toLowerCase().includes('kb') || client.cliente.toLowerCase().includes('barber') || client.empresa.toLowerCase().includes('barber');
-            if (isKbClient && getKbAppScriptUrl()) {
+            const lowerName = client.cliente.toLowerCase();
+            const lowerEmpresa = client.empresa.toLowerCase();
+
+            // Espelha na Estética KB apenas se o card for da KB
+            if ((lowerName.includes('kb') || lowerEmpresa.includes('kb')) && getKbAppScriptUrl()) {
                 setKbEsteticaStatus(novoStatus === 'ATIVO' ? 'ATIVO' : 'BLOQUEADO');
+            }
+
+            // Espelha na Barbearia apenas se o card for da Barbearia / Secret Barber
+            if ((lowerName.includes('barber') || lowerEmpresa.includes('barber') || lowerName.includes('barbearia') || lowerEmpresa.includes('barbearia')) && getBarberAppScriptUrl()) {
+                setBarberStatus(novoStatus === 'ATIVO' ? 'ATIVO' : 'BLOQUEADO');
             }
 
             showToast(novoStatus === 'ATIVO'
