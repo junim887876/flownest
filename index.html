@@ -1,73 +1,53 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- Impede indexação em mecanismos de busca -->
-    <meta name="robots" content="noindex, nofollow">
-    <title>FlowNest assinatura</title>
-
-    <!-- Configurações PWA (Android & iOS) -->
     <meta name="theme-color" content="#050814">
-    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FlowNest Admin">
+    <link rel="apple-touch-icon" id="pwa-apple-icon" href="">
+    <title>FlowNest (IA) • Gestão de Assinaturas & Licenças</title>
 
-    <!-- Ícone PWA / Favicon embutido em alta resolução -->
-    <link id="pwa-favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23050814'/%3E%3Cstop offset='100%25' stop-color='%230284c7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='512' height='512' rx='112' fill='url(%23g)'/%3E%3Cpath d='M256 116 L396 190 L256 264 L116 190 Z' fill='none' stroke='%2339ff4d' stroke-width='28' stroke-linejoin='round'/%3E%3Cpath d='M116 264 L256 338 L396 264 M116 334 L256 408 L396 334' fill='none' stroke='%23ffffff' stroke-width='28' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-    <link id="pwa-apple-icon" rel="apple-touch-icon" sizes="180x180" href="">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Gerador Real de QR Code PIX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- OneSignal Web SDK v16 -->
     <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
     <script>
-        window.OneSignalDeferred = window.OneSignalDeferred || [];
-        OneSignalDeferred.push(async function(OneSignal) {
-            await OneSignal.init({
-                appId: "265f8607-1010-49bc-be58-7c04e3e5305f",
-                safari_web_id: "",
-                notifyButton: {
-                    enable: true,
-                    size: 'medium',
-                    position: 'bottom-left',
-                    text: {
-                        'tip.state.unsubscribed': 'Ativar notificações FlowNest',
-                        'tip.state.subscribed': 'Notificações ativadas',
-                        'tip.state.blocked': 'Notificações bloqueadas no navegador',
-                        'message.prenotify': 'Clique para receber alertas de vencimento',
-                        'message.action.subscribed': 'Obrigado por ativar as notificações!',
-                        'message.action.resubscribed': 'Notificações reativadas!',
-                        'message.action.unsubscribed': 'Você não receberá mais alertas.',
-                        'dialog.main.title': 'Notificações FlowNest(IA)',
-                        'dialog.main.button.subscribe': 'ATIVAR',
-                        'dialog.main.button.unsubscribe': 'DESATIVAR',
-                        'dialog.blocked.title': 'Desbloquear Notificações',
-                        'dialog.blocked.message': 'Siga as instruções do navegador para permitir notificações:'
-                    }
-                },
-                allowLocalhostAsSecureOrigin: true
-            });
+      window.OneSignalDeferred = window.OneSignalDeferred || [];
+      OneSignalDeferred.push(async function(OneSignal) {
+        await OneSignal.init({
+          appId: "2da94507-56c5-49ed-a9d5-351d5d85a984",
+          notifyButton: { enable: true }
         });
+      });
     </script>
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Inter Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Biblioteca Leve para QR Code PIX -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
-                        'fn-bg': '#050814',
+                        'fn-dark': '#050814',
+                        'fn-navy': '#0a1126',
                         'fn-neon': '#39ff4d',
-                        'fn-cyan': '#38bdf8'
+                        'fn-blue': '#0284c7',
                     }
                 }
             }
@@ -75,336 +55,432 @@
     </script>
 
     <style>
-        * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { 
-            touch-action: manipulation; 
-            min-height: 100%; 
-            background-color: #050814; 
-            color: #ffffff; 
-            overflow-x: hidden; 
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
         }
-        .tabular-nums { font-variant-numeric: tabular-nums; }
 
-        .page-ambient-bg {
+        body {
+            background-color: #050814;
+            color: #ffffff;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bg-grid-pattern {
             position: fixed;
             inset: 0;
-            background: 
-                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.14) 0%, transparent 45%),
-                radial-gradient(circle at 85% 20%, rgba(99, 102, 241, 0.18) 0%, transparent 50%),
-                linear-gradient(180deg, #090e24 0%, #050814 60%, #040711 100%);
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+            background-size: 38px 38px;
             pointer-events: none;
             z-index: 0;
         }
 
-        .bottom-neon-line {
-            height: 2px;
-            width: 100%;
-            background: linear-gradient(90deg, transparent 0%, #22c55e 25%, #39ff4d 50%, #0ea5e9 75%, transparent 100%);
+        .bg-glow-top {
+            position: fixed;
+            top: -120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 820px;
+            height: 360px;
+            background: radial-gradient(ellipse at center, rgba(56, 189, 248, 0.16) 0%, rgba(57, 255, 77, 0.06) 40%, transparent 72%);
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .hero-profit-box {
-            position: relative;
-            border-radius: 24px;
-            background: linear-gradient(135deg, rgba(22, 32, 58, 0.92) 0%, rgba(11, 18, 36, 0.96) 55%, rgba(12, 38, 34, 0.92) 100%);
-            border: 1px solid rgba(57, 255, 77, 0.35);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55);
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
         }
 
-        .bolt-orb {
-            background: radial-gradient(circle at 35% 30%, rgba(57, 255, 77, 0.25), rgba(16, 185, 129, 0.06));
-            border: 1.5px solid rgba(57, 255, 77, 0.65);
+        .hero-neon-box {
+            background: linear-gradient(145deg, rgba(16, 26, 56, 0.85) 0%, rgba(10, 16, 36, 0.92) 100%);
+            border: 1.5px solid #39ff4d;
+            box-shadow: 0 0 28px rgba(57, 255, 77, 0.16), inset 0 0 20px rgba(57, 255, 77, 0.05);
+            border-radius: 26px;
         }
 
         .client-dark-card {
-            background: linear-gradient(180deg, rgba(19, 28, 52, 0.95) 0%, rgba(11, 17, 34, 0.98) 100%);
+            background: linear-gradient(180deg, rgba(16, 24, 48, 0.78) 0%, rgba(11, 17, 36, 0.88) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 22px;
-            border: 1px solid rgba(96, 165, 250, 0.24);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(12px);
+            transition: transform 0.18s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            contain: content;
+        }
+
+        .client-dark-card:hover {
+            border-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
         }
 
         .inner-profit-panel {
-            background: rgba(24, 35, 64, 0.75);
-            border: 1px solid rgba(148, 163, 184, 0.15);
+            background: rgba(6, 10, 24, 0.75);
+            border: 1px solid rgba(56, 189, 248, 0.35);
             border-radius: 14px;
-            padding: 10px 12px;
+            padding: 12px 14px;
         }
 
         .btn-more-details {
-            width: 100%;
-            padding: 9px 14px;
-            border-radius: 999px;
-            background: linear-gradient(180deg, #1d4ed8 0%, #173ba6 100%);
-            border: 1px solid rgba(96, 165, 250, 0.45);
+            background: linear-gradient(90deg, #0ea5e9 0%, #3b82f6 100%);
+            border-radius: 12px;
             color: #ffffff;
-            font-size: 12px;
             font-weight: 700;
+            font-size: 13px;
+            padding: 10px 14px;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 8px;
+            transition: opacity 0.15s ease, transform 0.12s ease;
+            border: none;
             cursor: pointer;
         }
-        .btn-more-details:active { transform: scale(0.97); }
 
-        .top-glass-pill {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.22);
+        .btn-more-details:active {
+            transform: scale(0.97);
+            opacity: 0.9;
         }
 
-        /* Estilos LED Status API Apps Script */
         .server-pill-online {
-            background: rgba(16, 185, 129, 0.12);
-            border: 1px solid rgba(57, 255, 77, 0.45);
-            box-shadow: 0 0 16px rgba(57, 255, 77, 0.15);
+            background: rgba(16, 36, 28, 0.88);
+            border: 1px solid rgba(57, 255, 77, 0.42);
+            box-shadow: 0 0 16px rgba(57, 255, 77, 0.14);
         }
+
         .server-pill-offline {
-            background: rgba(239, 68, 68, 0.14);
-            border: 1px solid rgba(248, 113, 113, 0.55);
-            box-shadow: 0 0 16px rgba(239, 68, 68, 0.22);
+            background: rgba(45, 14, 20, 0.92);
+            border: 1px solid rgba(239, 68, 68, 0.55);
+            box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
         }
+
         .server-pill-checking {
-            background: rgba(245, 158, 11, 0.12);
-            border: 1px solid rgba(251, 191, 36, 0.4);
+            background: rgba(36, 28, 12, 0.9);
+            border: 1px solid rgba(251, 191, 36, 0.45);
         }
 
         .led-glow-green {
             background-color: #39ff4d;
-            box-shadow: 0 0 8px #39ff4d, 0 0 16px #22c55e;
+            box-shadow: 0 0 10px #39ff4d, 0 0 18px rgba(57, 255, 77, 0.8);
         }
+
         .led-glow-red {
             background-color: #ef4444;
-            box-shadow: 0 0 8px #ef4444, 0 0 16px #dc2626;
+            box-shadow: 0 0 10px #ef4444, 0 0 18px rgba(239, 68, 68, 0.85);
         }
+
         .led-glow-amber {
             background-color: #fbbf24;
-            box-shadow: 0 0 8px #fbbf24;
+            box-shadow: 0 0 10px #fbbf24;
         }
 
-        .modal-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(3, 6, 16, 0.85); 
-            z-index: 1000; 
-            display: none; 
-            opacity: 0; 
-            transition: opacity 0.25s ease; 
+        .bottom-neon-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, #38bdf8 25%, #39ff4d 50%, #38bdf8 75%, transparent 100%);
+            box-shadow: 0 0 14px rgba(57, 255, 77, 0.75);
         }
-        .bottom-sheet { 
-            position: fixed; 
-            bottom: 0; 
-            left: 50%; 
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(2, 5, 14, 0.78);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
             transform: translate(-50%, 100%);
-            width: 100%; 
-            max-width: 520px; 
-            background: #10172d; 
-            color: #ffffff; 
-            border-top-left-radius: 26px; 
-            border-top-right-radius: 26px; 
-            padding: 18px 20px 32px; 
-            z-index: 1001; 
-            border-top: 1px solid rgba(96, 165, 250, 0.3); 
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
-            max-height: 92vh; 
-            overflow-y: auto; 
-        }
-        .modal-pill { 
-            width: 40px; 
-            height: 4px; 
-            background: rgba(255,255,255,0.22); 
-            border-radius: 99px; 
-            margin: 0 auto 16px; 
+            width: 100%;
+            max-width: 540px;
+            background: #0f162c;
+            border-top: 1px solid rgba(56, 189, 248, 0.35);
+            border-left: 1px solid rgba(255, 255, 255, 0.08);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            z-index: 60;
+            padding: 16px 22px 28px 22px;
+            transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+            max-height: 92vh;
+            overflow-y: auto;
         }
 
-        .spinner { 
-            border: 3px solid rgba(255,255,255,0.12); 
-            width: 34px; 
-            height: 34px; 
-            border-radius: 50%; 
-            border-left-color: #39ff4d; 
-            animation: spin 0.75s linear infinite; 
+        .modal-pill {
+            width: 40px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 99px;
+            margin: 0 auto 14px auto;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #050814;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .spinner {
+            width: 34px;
+            height: 34px;
+            border: 3px solid rgba(255, 255, 255, 0.12);
+            border-top-color: #39ff4d;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
         #toast-notification {
             position: fixed;
-            bottom: 20px;
+            top: 20px;
             left: 50%;
-            transform: translate(-50%, 120px);
-            z-index: 2000;
-            transition: transform 0.3s ease;
-            width: max-content;
+            transform: translate(-50%, -130%);
+            background: #101933;
+            color: #fff;
+            border: 1px solid rgba(57, 255, 77, 0.45);
+            padding: 11px 20px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 200;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
             max-width: 92vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        #toast-notification.show { transform: translate(-50%, 0); }
+
+        #toast-notification.show {
+            transform: translate(-50%, 0);
+        }
     </style>
 </head>
-<body class="bg-fn-bg min-h-screen font-sans selection:bg-fn-neon selection:text-slate-950 flex flex-col justify-between">
+<body>
 
-    <div class="page-ambient-bg"></div>
+    <div class="bg-grid-pattern"></div>
+    <div class="bg-glow-top"></div>
 
-    <!-- NOTIFICAÇÃO FLUTUANTE -->
-    <div id="toast-notification" class="bg-[#111933] border border-fn-neon/60 text-white px-4 py-3 rounded-full shadow-2xl flex items-center gap-2.5 text-xs font-bold">
-        <span class="w-5 h-5 rounded-full bg-fn-neon text-slate-950 flex items-center justify-center text-[10px] flex-shrink-0">
-            <i class="fa-solid fa-robot"></i>
-        </span>
-        <span id="toast-text" class="truncate">Sincronizando...</span>
+    <!-- Tela de Carregamento -->
+    <div id="loading-screen">
+        <div class="spinner mb-4"></div>
+        <p class="text-xs text-slate-300 font-semibold tracking-wider uppercase">Sincronizando FlowNest (IA)...</p>
     </div>
 
-    <!-- TELA DE CARREGAMENTO -->
-    <div id="loading-screen" class="fixed inset-0 z-50 bg-[#050814] flex flex-col justify-center items-center p-8 transition-opacity duration-300">
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-sky-500 to-fn-neon flex items-center justify-center mb-5 shadow-lg">
-            <i class="fa-solid fa-microchip text-2xl text-slate-950"></i>
-        </div>
-        <h1 class="text-2xl font-black text-white mb-1 tracking-tight">FLOWNEST<span class="text-sky-400">(IA)</span></h1>
-        <p class="text-xs text-slate-400 mb-6 font-medium text-center">Sincronizando licenças e mensalidades SaaS...</p>
-        <div class="spinner"></div>
+    <!-- Toast -->
+    <div id="toast-notification">
+        <span id="toast-text">Pronto!</span>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL -->
-    <div id="admin-dashboard" class="relative z-10 w-full flex-1 flex flex-col">
+    <!-- Container Principal -->
+    <div class="relative z-10 flex flex-col min-h-screen">
 
-        <!-- BARRA SUPERIOR -->
-        <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-5 pb-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <!-- TOPO / HEADER -->
+        <header class="w-full max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 
-            <!-- Logotipo FlowNest(IA) -->
-            <div class="flex items-center gap-3 select-none">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-500/20 to-emerald-500/20 border border-sky-400/40 flex items-center justify-center shadow-lg">
-                    <i class="fa-solid fa-layer-group text-xl text-fn-neon"></i>
-                </div>
-                <div>
-                    <div class="text-xl sm:text-2xl font-black tracking-tight leading-none">
-                        <span class="text-white">FLOWNEST</span><span class="text-sky-400">(IA)</span>
-                    </div>
-                    <p class="text-[9px] sm:text-[10px] font-semibold tracking-[0.22em] text-slate-300 uppercase mt-1">
-                        GESTÃO DE LICENÇAS & SAAS
-                    </p>
-                </div>
-            </div>
+                <!-- Identidade Visual FlowNest(IA) -->
+                <div class="flex items-center justify-between sm:justify-start gap-3">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#022c54] to-[#0284c7] border border-sky-400/35 flex items-center justify-center shadow-[0_0_20px_rgba(2,132,199,0.3)] flex-shrink-0">
+                            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3L21 8L12 13L3 8L12 3Z" stroke="#39ff4d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 13L12 18L21 13" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M3 17.5L12 22.5L21 17.5" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
 
-            <!-- Controles Superiores (Instalar App PWA + Status API + Filtro Status + Engrenagem) -->
-            <div class="flex flex-wrap items-center justify-center gap-2.5">
-
-                <!-- BOTÃO INSTALAR APP (PWA NA TELA DE INÍCIO) -->
-                <button id="btn-install-pwa" onclick="triggerPwaInstall()" title="Adicionar aplicativo à tela de início" class="hidden bg-gradient-to-r from-emerald-500 to-sky-500 text-slate-950 rounded-2xl px-3.5 py-2 flex items-center gap-2 font-black text-xs uppercase tracking-wider shadow-lg active:scale-95 transition-all cursor-pointer">
-                    <i class="fa-solid fa-mobile-screen-button text-sm"></i>
-                    <span>Instalar App</span>
-                </button>
-
-                <!-- INDICADOR LED DO APPS SCRIPT -->
-                <button onclick="loadAdminData(true)" id="server-status-pill" title="Clique para sincronizar novamente" class="server-pill-checking rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer">
-                    <span class="relative flex h-3 w-3 flex-shrink-0">
-                        <span id="server-led-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                        <span id="server-led-dot" class="relative inline-flex rounded-full h-3 w-3 led-glow-amber"></span>
-                    </span>
-                    <div class="text-left">
-                        <span id="server-status-label" class="block text-[11px] font-extrabold tracking-wider uppercase text-amber-300 leading-none">
-                            CONECTANDO...
-                        </span>
-                        <span id="server-status-sub" class="block text-[9px] font-medium text-slate-300 leading-tight mt-0.5">
-                            Google Apps Script
-                        </span>
-                    </div>
-                </button>
-
-                <!-- Filtro de Status -->
-                <div class="top-glass-pill rounded-2xl px-4 py-2 flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-sky-400">
-                        <i class="fa-solid fa-filter text-xs"></i>
-                    </div>
-                    <div class="text-left">
-                        <span class="block text-[10px] font-medium text-slate-400 leading-tight">Filtrar Licenças</span>
-                        <div class="flex items-center gap-1.5">
-                            <select id="status-filter" class="bg-transparent text-white font-extrabold text-sm cursor-pointer focus:outline-none pr-1" onchange="renderDashboard()">
-                                <option value="TODOS" class="bg-[#0b1022] text-white">Todos os Clientes</option>
-                                <option value="ATIVO" class="bg-[#0b1022] text-emerald-400">Somente Ativos (Verde)</option>
-                                <option value="OFF" class="bg-[#0b1022] text-red-400">Bloqueados / OFF (Vermelho)</option>
-                            </select>
-                            <i class="fa-solid fa-chevron-down text-slate-300 text-[10px] pointer-events-none"></i>
+                        <div>
+                            <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-white leading-none">
+                                FlowNest<span class="text-sky-400">(IA)</span>
+                            </h1>
+                            <p class="text-xs sm:text-sm text-slate-300 font-medium mt-1">
+                                Gestão de Assinaturas & Controle SaaS
+                            </p>
                         </div>
                     </div>
+
+                    <!-- Botões Instalar App & Engrenagem no Mobile -->
+                    <div class="flex sm:hidden items-center gap-2">
+                        <button id="btn-install-pwa-mobile" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden w-10 h-10 rounded-full bg-fn-neon/15 border border-fn-neon/40 flex items-center justify-center text-fn-neon">
+                            <i class="fa-solid fa-mobile-screen-button text-sm"></i>
+                        </button>
+                        <button onclick="openConfigModal()" title="Configurações" class="w-10 h-10 rounded-full bg-white/[0.06] border border-white/15 flex items-center justify-center text-slate-200">
+                            <i class="fa-solid fa-gear text-sm"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Botão Engrenagem (Configurar Apps Script URLs, Portal e PIX) -->
-                <button onclick="openConfigModal()" title="Configurar URLs do Apps Script, Portal e PIX" class="top-glass-pill w-11 h-11 rounded-full flex items-center justify-center text-white hover:border-fn-neon/50 active:scale-90 transition-all">
-                    <i class="fa-solid fa-gear text-sm"></i>
-                </button>
+                <!-- Controles Direitos: Status API + Filtro Status + Instalar + Atualizar + Engrenagem -->
+                <div class="flex items-center justify-between sm:justify-end gap-2.5 flex-wrap">
+
+                    <div id="server-status-pill" onclick="loadAdminData(true)" title="Clique para testar e sincronizar agora" class="server-pill-checking rounded-2xl px-3.5 py-2 flex items-center gap-2.5 transition-all active:scale-95 cursor-pointer">
+                        <span class="relative flex h-3 w-3">
+                            <span id="server-led-ping" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                            <span id="server-led-dot" class="relative inline-flex rounded-full h-3 w-3 led-glow-amber"></span>
+                        </span>
+                        <div class="leading-tight">
+                            <span id="server-status-label" class="block text-[11px] font-extrabold tracking-wider uppercase text-amber-300 leading-none">CONECTANDO...</span>
+                            <span id="server-status-sub" class="block text-[10px] text-slate-400 font-medium mt-0.5">Aguardando API</span>
+                        </div>
+                    </div>
+
+                    <!-- Filtro Rápido -->
+                    <div class="bg-[#0e152c] border border-white/15 rounded-full px-3.5 py-2 flex items-center gap-2">
+                        <i class="fa-solid fa-filter text-sky-400 text-xs"></i>
+                        <select id="status-filter" onchange="renderDashboard()" class="bg-transparent text-xs sm:text-sm font-semibold text-white focus:outline-none cursor-pointer pr-1">
+                            <option value="TODOS" class="bg-[#0e152c] text-white">Todos Clientes</option>
+                            <option value="ATIVO" class="bg-[#0e152c] text-emerald-400">Somente ATIVOS</option>
+                            <option value="OFF" class="bg-[#0e152c] text-red-400">Somente OFF</option>
+                        </select>
+                    </div>
+
+                    <!-- Botão Instalar PWA -->
+                    <button id="btn-install-pwa" onclick="triggerPwaInstall()" title="Adicionar à Tela de Início" class="hidden px-3.5 h-10 rounded-full bg-fn-neon/15 hover:bg-fn-neon/25 border border-fn-neon/45 flex items-center justify-center gap-2 text-fn-neon text-xs font-extrabold tracking-wide transition-all cursor-pointer">
+                        <i class="fa-solid fa-download text-xs"></i>
+                        <span>Instalar App</span>
+                    </button>
+
+                    <!-- Botão Sincronizar Planilha -->
+                    <button onclick="loadAdminData(true)" title="Atualizar Planilha" class="w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 flex items-center justify-center text-slate-200 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-rotate text-sm"></i>
+                    </button>
+
+                    <!-- Botão Engrenagem Desktop -->
+                    <button onclick="openConfigModal()" title="Configurações" class="hidden sm:flex w-10 h-10 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/15 items-center justify-center text-slate-200 transition-colors cursor-pointer">
+                        <i class="fa-solid fa-gear text-sm"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
-        <!-- BARRA 1: CONTROLE REMOTO — ESTÉTICA KB -->
-        <section id="kb-control-bar" class="hidden w-full max-w-3xl mx-auto px-4 sm:px-6 mt-1 mb-2">
-            <div class="top-glass-pill rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 border border-sky-400/35">
+        <!-- BARRA DE CONTROLE REMOTO 1: ESTÉTICA KB (ATIVO / BLOQUEADO) -->
+        <section id="kb-control-bar" class="hidden w-full max-w-6xl mx-auto px-4 sm:px-6 mb-3">
+            <div class="bg-[#0e1730]/90 border border-sky-400/35 rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(2,132,199,0.12)]">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-sky-500/15 border border-sky-400/35 flex items-center justify-center text-sky-400 flex-shrink-0">
-                        <i class="fa-solid fa-car-side text-sm"></i>
+                    <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/35 flex items-center justify-center text-sky-400 flex-shrink-0">
+                        <i class="fa-solid fa-car-side text-base"></i>
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-extrabold text-white">Estética KB (App Cliente)</span>
-                            <span id="kb-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/35">
-                                VERIFICANDO...
-                            </span>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs sm:text-sm font-extrabold text-white tracking-tight">Licença Estética KB (App Cliente)</span>
+                            <span id="kb-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-700 text-slate-300">VERIFICANDO...</span>
                         </div>
-                        <span id="kb-status-subtext" class="block text-[10px] text-slate-400 mt-0.5">Sincronizado via Apps Script Estética KB</span>
+                        <p id="kb-status-subtext" class="text-[11px] text-slate-400 mt-0.5">Sincronizando com a aba Configuracoes da planilha KB...</p>
                     </div>
                 </div>
+
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button type="button" onclick="setKbEsteticaStatus('ATIVO')" id="btn-kb-ativo" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 cursor-pointer">
-                        <i class="fa-solid fa-check"></i>
-                        <span>Ativo</span>
+                    <button id="btn-kb-ativo" onclick="setKbEsteticaStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Ativar (ATIVO)</span>
                     </button>
-                    <button type="button" onclick="setKbEsteticaStatus('BLOQUEADO')" id="btn-kb-bloqueado" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500 hover:text-white cursor-pointer">
+                    <button id="btn-kb-bloqueado" onclick="setKbEsteticaStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
-                        <span>Bloqueado</span>
+                        <span>Bloquear</span>
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- BARRA 2: CONTROLE REMOTO — BARBEARIA (SECRET BARBER) -->
-        <section id="barber-control-bar" class="hidden w-full max-w-3xl mx-auto px-4 sm:px-6 mt-1 mb-2">
-            <div class="top-glass-pill rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3 border border-amber-400/35">
+        <!-- BARRA DE CONTROLE REMOTO 2: BARBEARIA / SECRET BARBER (ATIVO / BLOQUEADO) -->
+        <section id="barber-control-bar" class="hidden w-full max-w-6xl mx-auto px-4 sm:px-6 mb-3">
+            <div class="bg-[#12162b]/90 border border-amber-400/35 rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(245,158,11,0.12)]">
                 <div class="flex items-center gap-3">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-400/35 flex items-center justify-center text-amber-400 flex-shrink-0">
-                        <i class="fa-solid fa-scissors text-sm"></i>
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-400/35 flex items-center justify-center text-amber-400 flex-shrink-0">
+                        <i class="fa-solid fa-scissors text-base"></i>
                     </div>
                     <div>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs font-extrabold text-white">Secret Barber (Barbearia)</span>
-                            <span id="barber-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/35">
-                                VERIFICANDO...
-                            </span>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs sm:text-sm font-extrabold text-white tracking-tight">Licença Barbearia (Secret Barber)</span>
+                            <span id="barber-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-700 text-slate-300">VERIFICANDO...</span>
                         </div>
-                        <span id="barber-status-subtext" class="block text-[10px] text-slate-400 mt-0.5">Sincronizado via Apps Script Barbearia</span>
+                        <p id="barber-status-subtext" class="text-[11px] text-slate-400 mt-0.5">Sincronizando com a aba Configuracoes da planilha Barbearia...</p>
                     </div>
                 </div>
+
                 <div class="flex items-center gap-2 w-full sm:w-auto">
-                    <button type="button" onclick="setBarberStatus('ATIVO')" id="btn-barber-ativo" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500 hover:text-slate-950 cursor-pointer">
-                        <i class="fa-solid fa-check"></i>
-                        <span>Ativo</span>
+                    <button id="btn-barber-ativo" onclick="setBarberStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Ativar (ATIVO)</span>
                     </button>
-                    <button type="button" onclick="setBarberStatus('BLOQUEADO')" id="btn-barber-bloqueado" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500 hover:text-white cursor-pointer">
+                    <button id="btn-barber-bloqueado" onclick="setBarberStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
                         <i class="fa-solid fa-ban"></i>
-                        <span>Bloqueado</span>
+                        <span>Bloquear</span>
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- HERO CARD DE RECEITA MENSAL RECORRENTE (MRR) -->
-        <section class="w-full max-w-3xl mx-auto px-4 sm:px-6 mt-2 mb-7">
-            <div class="hero-profit-box px-5 py-5 sm:px-9 sm:py-7 flex items-center justify-between gap-4">
-
-                <div class="bolt-orb w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center flex-shrink-0">
-                    <i class="fa-solid fa-sack-dollar text-2xl sm:text-3xl text-fn-neon"></i>
+        <!-- BARRA DE CONTROLE REMOTO 3: TNSOLAR GESTÃO (INDEX PROPRIETÁRIO - ATIVO / BLOQUEADO) -->
+        <section id="tnsolar-control-bar" class="hidden w-full max-w-6xl mx-auto px-4 sm:px-6 mb-4">
+            <div class="bg-[#161429]/90 border border-orange-400/40 rounded-2xl px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-[0_0_20px_rgba(249,115,22,0.14)]">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-orange-500/15 border border-orange-400/35 flex items-center justify-center text-orange-400 flex-shrink-0">
+                        <i class="fa-solid fa-solar-panel text-base"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <span class="text-xs sm:text-sm font-extrabold text-white tracking-tight">Licença TNSolar Gestão (Index Proprietário)</span>
+                            <span id="tnsolar-status-badge" class="text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-slate-700 text-slate-300">VERIFICANDO...</span>
+                        </div>
+                        <p id="tnsolar-status-subtext" class="text-[11px] text-slate-400 mt-0.5">Sincronizando com a aba Configuracoes da planilha TNSolar...</p>
+                    </div>
                 </div>
 
-                <div class="flex-1 text-center min-w-0">
-                    <div class="inline-flex items-center justify-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-[0.14em] text-slate-200 mb-1">
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <button id="btn-tnsolar-ativo" onclick="setTnsolarStatus('ATIVO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Ativar (ATIVO)</span>
+                    </button>
+                    <button id="btn-tnsolar-bloqueado" onclick="setTnsolarStatus('BLOQUEADO')" class="flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer">
+                        <i class="fa-solid fa-ban"></i>
+                        <span>Bloquear</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- HERO CARD: RECEITA RECORRENTE MENSAL (MRR) -->
+        <section class="w-full max-w-3xl mx-auto px-4 sm:px-6 mb-7">
+            <div class="hero-neon-box px-5 py-6 sm:px-8 sm:py-7 flex items-center justify-between gap-4">
+
+                <div class="hidden sm:flex items-center justify-center flex-shrink-0 w-24 h-20">
+                    <svg viewBox="0 0 110 80" class="w-full h-full" fill="none">
+                        <ellipse cx="45" cy="60" rx="22" ry="7" fill="#0ea5e9" stroke="#38bdf8" stroke-width="1.5"/>
+                        <path d="M23 52V60C23 63.8 32.8 67 45 67C57.2 67 67 63.8 67 60V52" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+                        <ellipse cx="45" cy="52" rx="22" ry="7" fill="#38bdf8"/>
+                        <path d="M23 44V52C23 55.8 32.8 59 45 59C57.2 59 67 55.8 67 52V44" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+                        <ellipse cx="45" cy="44" rx="22" ry="7" fill="#7dd3fc"/>
+                        <circle cx="80" cy="48" r="18" fill="#10b981" stroke="#39ff4d" stroke-width="2"/>
+                        <text x="80" y="54" text-anchor="middle" fill="#052e16" font-weight="900" font-size="18" font-family="Inter">$</text>
+                    </svg>
+                </div>
+
+                <div class="flex-1 text-center">
+                    <div class="flex items-center justify-center gap-2 text-xs sm:text-sm font-bold tracking-wider text-slate-200 uppercase mb-1">
                         <i class="fa-solid fa-arrow-trend-up text-fn-neon"></i>
                         <span id="hero-month-title">RECEITA MENSAL ATIVA (MRR)</span>
                     </div>
@@ -438,7 +514,7 @@
             </div>
         </section>
 
-        <!-- BARRA CLIENTES & LICENÇAS + BOTÃO CADASTRAR + BUSCA -->
+        <!-- BARRA CLIENTES & LICENÇAS -->
         <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-12">
 
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
@@ -451,7 +527,6 @@
                     </span>
                 </div>
 
-                <!-- Ações da barra: Botão Cadastrar Cliente + Campo de Busca -->
                 <div class="flex items-center gap-2.5 w-full sm:w-auto">
                     <button 
                         onclick="openNewClientModal()" 
@@ -598,7 +673,6 @@
             </div>
         </div>
 
-        <!-- CONTROLE DE ACESSO RÁPIDO (BOTÃO VERDE ATIVAR / BOTÃO VERMELHO BLOQUEAR) -->
         <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 mb-4">
             <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block mb-2.5">
                 Controle de Licença (Aba Login -> Status)
@@ -615,7 +689,6 @@
             </div>
         </div>
 
-        <!-- EDIÇÃO DE DIA DE VENCIMENTO E VALOR DA MENSALIDADE -->
         <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-4 space-y-3 mb-4">
             <span class="text-[10px] font-extrabold uppercase tracking-wider text-sky-400 block border-b border-white/10 pb-2">
                 <i class="fa-solid fa-pen-to-square mr-1"></i> Editar Dados na Planilha (Aba pagamento)
@@ -638,7 +711,6 @@
             </button>
         </div>
 
-        <!-- RESUMO DE DADOS DE ACESSO -->
         <div class="bg-white/[0.04] border border-white/10 rounded-2xl p-3.5 space-y-2 text-xs mb-4">
             <div class="flex justify-between items-center text-slate-300">
                 <span>Senha / Chave de Login:</span>
@@ -650,7 +722,6 @@
             </div>
         </div>
 
-        <!-- Botões de Ação Rápida de Cobrança e Remoção -->
         <div class="grid grid-cols-1 gap-2.5">
             <button id="modal-whatsapp-share-btn" class="w-full py-3.5 bg-[#25D366] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs uppercase tracking-wider transition-transform flex items-center justify-center gap-2 shadow-lg">
                 <i class="fa-brands fa-whatsapp text-base"></i>
@@ -713,6 +784,15 @@
                 <p class="text-[10px] text-slate-400 mt-1">Cole aqui a URL do Apps Script da <strong>Barbearia (Secret Barber)</strong> para ativar/bloquear e notificar via OneSignal.</p>
             </div>
 
+            <!-- CAMPO 3: URL EXCLUSIVA PARA O INDEX PROPRIETÁRIO (TNSOLAR GESTÃO) -->
+            <div class="border-t border-white/10 pt-3">
+                <label class="block text-[11px] font-bold text-orange-400 uppercase mb-1.5">
+                    <i class="fa-solid fa-solar-panel mr-1"></i> URL Google Apps Script — Index Proprietário (TNSolar)
+                </label>
+                <input type="url" id="input-tnsolar-appscript-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full bg-white/5 border border-orange-400/45 rounded-xl px-4 py-3 text-xs font-mono text-white focus:outline-none focus:border-orange-400">
+                <p class="text-[10px] text-slate-400 mt-1">Cole aqui a URL do Apps Script do <strong>Index Proprietário (TNSolar Gestão)</strong> para ativar/bloquear o acesso e enviar push via OneSignal.</p>
+            </div>
+
             <div class="border-t border-white/10 pt-3">
                 <label class="block text-[11px] font-bold text-sky-400 uppercase mb-1.5">
                     <i class="fa-solid fa-globe mr-1"></i> Link de Acesso do Sistema (Enviado no WhatsApp)
@@ -760,7 +840,7 @@
 
     <script>
         /* =====================================================================
-           INICIALIZAÇÃO PWA (MANIFEST DINÂMICO + ÍCONE PNG + INSTALL PROMPT)
+           INICIALIZAÇÃO PWA
            ===================================================================== */
         let deferredPwaPrompt = null;
 
@@ -813,18 +893,8 @@
                 background_color: '#050814',
                 theme_color: '#050814',
                 icons: [
-                    {
-                        src: pngIconDataUrl,
-                        sizes: '192x192',
-                        type: 'image/png',
-                        purpose: 'any maskable'
-                    },
-                    {
-                        src: pngIconDataUrl,
-                        sizes: '512x512',
-                        type: 'image/png',
-                        purpose: 'any maskable'
-                    }
+                    { src: pngIconDataUrl, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+                    { src: pngIconDataUrl, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
                 ]
             };
 
@@ -840,13 +910,17 @@
             e.preventDefault();
             deferredPwaPrompt = e;
             const installBtn = document.getElementById('btn-install-pwa');
+            const installBtnMobile = document.getElementById('btn-install-pwa-mobile');
             if (installBtn) installBtn.classList.remove('hidden');
+            if (installBtnMobile) installBtnMobile.classList.remove('hidden');
         });
 
         window.addEventListener('appinstalled', () => {
             deferredPwaPrompt = null;
             const installBtn = document.getElementById('btn-install-pwa');
+            const installBtnMobile = document.getElementById('btn-install-pwa-mobile');
             if (installBtn) installBtn.classList.add('hidden');
+            if (installBtnMobile) installBtnMobile.classList.add('hidden');
             showToast('FlowNest(IA) instalado na tela de início!');
         });
 
@@ -856,7 +930,8 @@
                 const { outcome } = await deferredPwaPrompt.userChoice;
                 if (outcome === 'accepted') {
                     deferredPwaPrompt = null;
-                    document.getElementById('btn-install-pwa').classList.add('hidden');
+                    document.getElementById('btn-install-pwa')?.classList.add('hidden');
+                    document.getElementById('btn-install-pwa-mobile')?.classList.add('hidden');
                 }
             } else {
                 alert('Para adicionar à tela de início:\n\n• No iPhone (Safari): toque no ícone de Compartilhar (quadrado com seta para cima) e escolha "Adicionar à Tela de Início".\n• No Android (Chrome): toque nos 3 pontinhos no canto superior e escolha "Instalar aplicativo" ou "Adicionar à tela inicial".');
@@ -864,17 +939,19 @@
         }
 
         /* =====================================================================
-           CONFIGURAÇÕES LOCAIS (SEM DADOS SENSÍVEIS NO CÓDIGO-FONTE)
+           CONFIGURAÇÕES LOCAIS (localStorage - VAZIAS NO CÓDIGO FONTE)
            ===================================================================== */
         const DEFAULT_APPSCRIPT_URL = '';
         const DEFAULT_KB_APPSCRIPT_URL = '';
         const DEFAULT_BARBER_APPSCRIPT_URL = '';
+        const DEFAULT_TNSOLAR_APPSCRIPT_URL = '';
         const DEFAULT_PORTAL_URL = '';
         const DEFAULT_PIX_CODE = '';
 
         const STORAGE_APPSCRIPT_URL = 'flownest_appscript_url_v1';
         const STORAGE_KB_APPSCRIPT_URL = 'flownest_kb_appscript_url_v1';
         const STORAGE_BARBER_APPSCRIPT_URL = 'flownest_barber_appscript_url_v1';
+        const STORAGE_TNSOLAR_APPSCRIPT_URL = 'flownest_tnsolar_appscript_url_v1';
         const STORAGE_PORTAL_URL = 'flownest_portal_url_v1';
         const STORAGE_PIX_CODE = 'flownest_pix_code_v1';
         const STORAGE_PIX_MODE = 'flownest_pix_mode_v1';
@@ -911,22 +988,23 @@
             const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
             const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
             if (isIos && !isStandalone) {
-                const installBtn = document.getElementById('btn-install-pwa');
-                if (installBtn) installBtn.classList.remove('hidden');
+                document.getElementById('btn-install-pwa')?.classList.remove('hidden');
+                document.getElementById('btn-install-pwa-mobile')?.classList.remove('hidden');
             }
 
             syncKbEsteticaStatus();
             syncBarberStatus();
+            syncTnsolarStatus();
 
             const scriptUrl = getAppScriptUrl();
             if (!scriptUrl) {
-                if (getKbAppScriptUrl() || getBarberAppScriptUrl()) {
+                if (getKbAppScriptUrl() || getBarberAppScriptUrl() || getTnsolarAppScriptUrl()) {
                     const loadingScreen = document.getElementById('loading-screen');
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => { loadingScreen.style.display = 'none'; }, 300);
                     setApiLedStatus('online', 'CONECTADO', 'Modo Controle Remoto');
                 } else {
-                    showConfigScreen('Clique no botão abaixo para configurar as URLs do Apps Script e seu Código PIX na memória deste navegador.');
+                    showConfigScreen('Clique no botão abaixo para colar manualmente as URLs do Apps Script (Geral, Estética KB, Barbearia e Index Proprietário TNSolar) na memória deste navegador.');
                     setApiLedStatus('offline', 'SEM CONFIGURAÇÃO', 'Configure na engrenagem');
                 }
             } else {
@@ -934,9 +1012,6 @@
             }
         };
 
-        /* =====================================================================
-           GERENCIAMENTO DE CONFIGURAÇÕES LOCAIS (localStorage)
-           ===================================================================== */
         function getAppScriptUrl() {
             return (localStorage.getItem(STORAGE_APPSCRIPT_URL) || DEFAULT_APPSCRIPT_URL).trim();
         }
@@ -947,6 +1022,10 @@
 
         function getBarberAppScriptUrl() {
             return (localStorage.getItem(STORAGE_BARBER_APPSCRIPT_URL) || DEFAULT_BARBER_APPSCRIPT_URL).trim();
+        }
+
+        function getTnsolarAppScriptUrl() {
+            return (localStorage.getItem(STORAGE_TNSOLAR_APPSCRIPT_URL) || DEFAULT_TNSOLAR_APPSCRIPT_URL).trim();
         }
 
         function getPortalUrl() {
@@ -961,6 +1040,7 @@
             document.getElementById('input-appscript-url').value = getAppScriptUrl();
             document.getElementById('input-kb-appscript-url').value = getKbAppScriptUrl();
             document.getElementById('input-barber-appscript-url').value = getBarberAppScriptUrl();
+            document.getElementById('input-tnsolar-appscript-url').value = getTnsolarAppScriptUrl();
             document.getElementById('input-portal-url').value = getPortalUrl();
             document.getElementById('input-pix-code').value = getStoredPixCode();
             document.getElementById('input-pix-mode').value = localStorage.getItem(STORAGE_PIX_MODE) || 'official_with_amount';
@@ -986,14 +1066,21 @@
             const urlVal = document.getElementById('input-appscript-url').value.trim();
             const kbUrlVal = document.getElementById('input-kb-appscript-url').value.trim();
             const barberUrlVal = document.getElementById('input-barber-appscript-url').value.trim();
+            const tnsolarUrlVal = document.getElementById('input-tnsolar-appscript-url').value.trim();
 
             const hasAnyValidUrl =
                 (urlVal && urlVal.startsWith('http')) ||
                 (kbUrlVal && kbUrlVal.startsWith('http')) ||
-                (barberUrlVal && barberUrlVal.startsWith('http'));
+                (barberUrlVal && barberUrlVal.startsWith('http')) ||
+                (tnsolarUrlVal && tnsolarUrlVal.startsWith('http'));
 
             if (!hasAnyValidUrl) {
                 alert('Por favor, insira pelo menos uma URL válida do Google Apps Script (começando com https://script.google.com/...).');
+                return;
+            }
+
+            if (urlVal && !urlVal.startsWith('http')) {
+                alert('A URL do Google Apps Script Geral precisa começar com https://script.google.com/...');
                 return;
             }
 
@@ -1007,39 +1094,32 @@
                 return;
             }
 
+            if (tnsolarUrlVal && !tnsolarUrlVal.startsWith('http')) {
+                alert('A URL do Google Apps Script do Index Proprietário (TNSolar) precisa começar com https://script.google.com/...');
+                return;
+            }
+
             const portalVal = document.getElementById('input-portal-url').value.trim();
             const pixVal = document.getElementById('input-pix-code').value.trim();
             const pixModeVal = document.getElementById('input-pix-mode').value || 'official_with_amount';
 
-            if (urlVal) {
-                localStorage.setItem(STORAGE_APPSCRIPT_URL, urlVal);
-            } else {
-                localStorage.removeItem(STORAGE_APPSCRIPT_URL);
-            }
+            if (urlVal) localStorage.setItem(STORAGE_APPSCRIPT_URL, urlVal);
+            else localStorage.removeItem(STORAGE_APPSCRIPT_URL);
 
-            if (kbUrlVal) {
-                localStorage.setItem(STORAGE_KB_APPSCRIPT_URL, kbUrlVal);
-            } else {
-                localStorage.removeItem(STORAGE_KB_APPSCRIPT_URL);
-            }
+            if (kbUrlVal) localStorage.setItem(STORAGE_KB_APPSCRIPT_URL, kbUrlVal);
+            else localStorage.removeItem(STORAGE_KB_APPSCRIPT_URL);
 
-            if (barberUrlVal) {
-                localStorage.setItem(STORAGE_BARBER_APPSCRIPT_URL, barberUrlVal);
-            } else {
-                localStorage.removeItem(STORAGE_BARBER_APPSCRIPT_URL);
-            }
+            if (barberUrlVal) localStorage.setItem(STORAGE_BARBER_APPSCRIPT_URL, barberUrlVal);
+            else localStorage.removeItem(STORAGE_BARBER_APPSCRIPT_URL);
 
-            if (portalVal) {
-                localStorage.setItem(STORAGE_PORTAL_URL, portalVal);
-            } else {
-                localStorage.removeItem(STORAGE_PORTAL_URL);
-            }
+            if (tnsolarUrlVal) localStorage.setItem(STORAGE_TNSOLAR_APPSCRIPT_URL, tnsolarUrlVal);
+            else localStorage.removeItem(STORAGE_TNSOLAR_APPSCRIPT_URL);
 
-            if (pixVal) {
-                localStorage.setItem(STORAGE_PIX_CODE, pixVal);
-            } else {
-                localStorage.removeItem(STORAGE_PIX_CODE);
-            }
+            if (portalVal) localStorage.setItem(STORAGE_PORTAL_URL, portalVal);
+            else localStorage.removeItem(STORAGE_PORTAL_URL);
+
+            if (pixVal) localStorage.setItem(STORAGE_PIX_CODE, pixVal);
+            else localStorage.removeItem(STORAGE_PIX_CODE);
 
             localStorage.setItem(STORAGE_PIX_MODE, pixModeVal);
 
@@ -1048,10 +1128,11 @@
         }
 
         function clearAppConfig() {
-            if (confirm('Deseja apagar as URLs do Apps Script (Geral, Estética KB e Barbearia), o link do portal e o código PIX salvos neste navegador?')) {
+            if (confirm('Deseja apagar as URLs do Apps Script (Geral, Estética KB, Barbearia e Index Proprietário TNSolar), o link do portal e o código PIX salvos neste navegador?')) {
                 localStorage.removeItem(STORAGE_APPSCRIPT_URL);
                 localStorage.removeItem(STORAGE_KB_APPSCRIPT_URL);
                 localStorage.removeItem(STORAGE_BARBER_APPSCRIPT_URL);
+                localStorage.removeItem(STORAGE_TNSOLAR_APPSCRIPT_URL);
                 localStorage.removeItem(STORAGE_PORTAL_URL);
                 localStorage.removeItem(STORAGE_PIX_CODE);
                 localStorage.removeItem(STORAGE_PIX_MODE);
@@ -1116,10 +1197,7 @@
             if (!kbUrl) return;
 
             const alvoAtivo = String(novoStatus).toUpperCase() === 'ATIVO';
-            showToast(alvoAtivo
-                ? 'Ativando licença da Estética KB...'
-                : 'Bloqueando acesso da Estética KB...'
-            );
+            showToast(alvoAtivo ? 'Ativando licença da Estética KB...' : 'Bloqueando acesso da Estética KB...');
 
             let vencParaEnviar = vencimentoIsoOpcional;
             if (alvoAtivo && !vencParaEnviar) {
@@ -1244,10 +1322,97 @@
             }
         }
 
+        /* =====================================================================
+           CONTROLE REMOTO 3 — INDEX PROPRIETÁRIO / TNSOLAR GESTÃO (ATIVO / BLOQUEADO)
+           ===================================================================== */
+        function updateTnsolarStatusUi(statusStr) {
+            const badge = document.getElementById('tnsolar-status-badge');
+            const subtext = document.getElementById('tnsolar-status-subtext');
+            const btnAtivo = document.getElementById('btn-tnsolar-ativo');
+            const btnBloqueado = document.getElementById('btn-tnsolar-bloqueado');
+
+            const isAtivo = String(statusStr || '').toUpperCase() === 'ATIVO';
+
+            if (isAtivo) {
+                badge.innerText = 'ATIVO';
+                badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+                subtext.innerText = 'Index Proprietário TNSolar liberado (ATIVO)';
+                btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500 text-slate-950 shadow-[0_0_12px_rgba(57,255,77,0.35)] cursor-pointer';
+                btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500/15 text-red-300 border border-red-500/40 hover:bg-red-500/25 cursor-pointer';
+            } else {
+                badge.innerText = 'BLOQUEADO';
+                badge.className = 'text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider bg-red-500/20 text-red-300 border border-red-500/40';
+                subtext.innerText = 'Index Proprietário travado (BLOQUEADO) • Push enviado';
+                btnAtivo.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-emerald-500/15 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/25 cursor-pointer';
+                btnBloqueado.className = 'flex-1 sm:flex-initial py-2 px-3.5 rounded-xl text-[11px] font-extrabold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-95 bg-red-500 text-white shadow-[0_0_12px_rgba(239,68,68,0.35)] cursor-pointer';
+            }
+        }
+
+        async function syncTnsolarStatus() {
+            const tnsolarUrl = getTnsolarAppScriptUrl();
+            const bar = document.getElementById('tnsolar-control-bar');
+            if (!tnsolarUrl) {
+                if (bar) bar.classList.add('hidden');
+                return;
+            }
+            if (bar) bar.classList.remove('hidden');
+
+            try {
+                const sep = tnsolarUrl.includes('?') ? '&' : '?';
+                const res = await fetch(`${tnsolarUrl}${sep}action=check_license&t=${Date.now()}`);
+                const data = await res.json();
+                if (data && data.sistema) {
+                    updateTnsolarStatusUi(data.sistema.status || (data.sistema.ativo ? 'ATIVO' : 'BLOQUEADO'));
+                } else if (data && data.status === 'locked') {
+                    updateTnsolarStatusUi('BLOQUEADO');
+                } else if (data && data.status === 'ok') {
+                    updateTnsolarStatusUi('ATIVO');
+                }
+            } catch (e) {
+                const subtext = document.getElementById('tnsolar-status-subtext');
+                if (subtext) subtext.innerText = 'Erro ao ler status do Index Proprietário TNSolar (verifique a URL)';
+            }
+        }
+
+        async function setTnsolarStatus(novoStatus) {
+            const tnsolarUrl = getTnsolarAppScriptUrl();
+            if (!tnsolarUrl) return;
+
+            const alvoAtivo = String(novoStatus).toUpperCase() === 'ATIVO';
+            showToast(alvoAtivo
+                ? 'Liberando Index Proprietário TNSolar e notificando...'
+                : 'Travando Index Proprietário TNSolar e notificando via OneSignal...'
+            );
+
+            try {
+                const res = await fetch(tnsolarUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'update_license',
+                        status: alvoAtivo ? 'ATIVO' : 'BLOQUEADO'
+                    })
+                });
+                const result = await res.json();
+                if (result && (result.ok || result.status === 'ok' || result.status === 'locked')) {
+                    const finalStatus = (result.sistema && result.sistema.status) || (alvoAtivo ? 'ATIVO' : 'BLOQUEADO');
+                    updateTnsolarStatusUi(finalStatus);
+                    showToast(alvoAtivo
+                        ? '✅ Index Proprietário TNSolar ATIVO e push enviado!'
+                        : '🔴 Index Proprietário TNSolar BLOQUEADO e push enviado via OneSignal!'
+                    );
+                } else {
+                    throw new Error((result && (result.error || result.message)) || 'Resposta inválida do Apps Script TNSolar');
+                }
+            } catch (err) {
+                showToast('Erro ao alterar status da TNSolar: ' + err.message);
+            }
+        }
+
         async function testAdminOneSignalPush() {
             const scriptUrl = getAppScriptUrl();
             if (!scriptUrl) {
-                alert('Configure primeiro a URL do Google Apps Script.');
+                alert('Configure primeiro a URL do Google Apps Script Geral.');
                 return;
             }
             showToast('Disparando notificação de teste via OneSignal...');
@@ -1544,12 +1709,13 @@
         }
 
         /* =====================================================================
-           LEITURA DE DADOS DO GOOGLE APPS SCRIPT (ABAS LOGIN + PAGAMENTO)
+           LEITURA DE DADOS DO GOOGLE APPS SCRIPT
            ===================================================================== */
         async function loadAdminData(manual = false) {
             const scriptUrl = getAppScriptUrl();
             syncKbEsteticaStatus();
             syncBarberStatus();
+            syncTnsolarStatus();
 
             if (!scriptUrl) return;
 
@@ -1604,7 +1770,7 @@
         }
 
         /* =====================================================================
-           ALTERAR STATUS (BOTÃO VERDE ATIVO / BOTÃO VERMELHO OFF)
+           ALTERAR STATUS
            ===================================================================== */
         async function toggleClientStatus(index, targetStatus) {
             const client = globalClientsList[index];
@@ -1642,6 +1808,11 @@
             // Espelha na Barbearia apenas se o card for da Barbearia / Secret Barber
             if ((lowerName.includes('barber') || lowerEmpresa.includes('barber') || lowerName.includes('barbearia') || lowerEmpresa.includes('barbearia')) && getBarberAppScriptUrl()) {
                 setBarberStatus(novoStatus === 'ATIVO' ? 'ATIVO' : 'BLOQUEADO');
+            }
+
+            // Espelha no Index Proprietário (TNSolar Gestão) apenas se o card for da TNSolar
+            if ((lowerName.includes('tnsolar') || lowerEmpresa.includes('tnsolar') || lowerName.includes('tn solar') || lowerEmpresa.includes('tn solar')) && getTnsolarAppScriptUrl()) {
+                setTnsolarStatus(novoStatus === 'ATIVO' ? 'ATIVO' : 'BLOQUEADO');
             }
 
             showToast(novoStatus === 'ATIVO'
@@ -1819,7 +1990,6 @@
                                 ${statusPillHtml}
                             </div>
 
-                            <!-- NOME CLICÁVEL: GERA FATURA PNG E ENVIA NO WHATSAPP -->
                             <button 
                                 onclick="shareOrDownloadInvoice(${originalIndex}, true)" 
                                 class="w-full text-left group flex items-center justify-between gap-2 mb-2 focus:outline-none active:scale-[0.98] transition-transform"
@@ -1845,7 +2015,6 @@
                         </div>
 
                         <div>
-                            <!-- PAINEL DO VALOR DA MENSALIDADE -->
                             <div class="inner-profit-panel flex items-center gap-3 mb-2.5">
                                 <div class="w-10 h-10 rounded-xl bg-sky-500/15 border border-sky-400/30 flex items-center justify-center flex-shrink-0">
                                     <i class="fa-solid fa-money-bill-wave text-sky-400 text-base"></i>
@@ -1856,7 +2025,6 @@
                                 </div>
                             </div>
 
-                            <!-- BOTÕES RÁPIDOS: VERDE (ATIVAR) / VERMELHO (DESATIVAR OFF) -->
                             <div class="grid grid-cols-2 gap-2 mb-2.5">
                                 <button 
                                     onclick="toggleClientStatus(${originalIndex}, 'ATIVO')" 
@@ -1874,7 +2042,6 @@
                                 </button>
                             </div>
 
-                            <!-- BOTÃO EDITAR / DETALHES -->
                             <button onclick="openModal(${originalIndex})" class="btn-more-details">
                                 <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                 <span>Editar / Remover</span>
@@ -1987,7 +2154,7 @@ Para facilitar e agilizar, reunimos tudo o que você precisa aqui:
         }
 
         /* =====================================================================
-           GERADOR DE PAYLOAD PIX (CRC16 BCB - LENDO DO LOCALSTORAGE)
+           GERADOR DE PAYLOAD PIX (CRC16 BCB)
            ===================================================================== */
         function calculateCRC16(payloadWithoutCrc) {
             let crc = 0xFFFF;
